@@ -7,14 +7,12 @@ public static class MeshGenerator
     static List<int> triangles;
     static int vertCount;
     static List<Vector3> vertices;
-    static Dictionary<Vector3, int> vertMap;
     static Grid grid;
     public static Mesh CreateMesh(Grid _grid){
         grid = _grid;
         triangles = new List<int>();
         vertCount = 0;
         vertices = new List<Vector3>();
-        vertMap = new Dictionary<Vector3, int>();
 
         for(int x = 0; x < grid.gridSize.x; x++){
             for(int y = 0; y < grid.gridSize.y; y++){
@@ -47,20 +45,16 @@ public static class MeshGenerator
     //adding vertices to a (coordinate, index) dictionary to avoid repitition of vertices
     static void AssignVertices(List<Vector3> verts){
         foreach(Vector3 vert in verts){
-            if(!vertMap.ContainsKey(vert)){
-                vertices.Add(vert);
-                vertMap.Add(vert, vertCount);
-                vertCount++;
-            }
+            vertices.Add(vert);
         }
-        CreateTriangle(verts[0], verts[1], verts[2]);
-        CreateTriangle(verts[0], verts[2], verts[3]);
+        CreateTriangle(vertices.Count - 4, vertices.Count - 3, vertices.Count - 2);
+        CreateTriangle(vertices.Count - 4, vertices.Count - 2, vertices.Count - 1);
     }
 
-    static void CreateTriangle(Vector3 a, Vector3 b, Vector3 c){
-        triangles.Add(vertMap[a]);
-        triangles.Add(vertMap[b]);
-        triangles.Add(vertMap[c]);  
+    static void CreateTriangle(int a, int b, int c){
+        triangles.Add(a);
+        triangles.Add(b);
+        triangles.Add(c);  
     }
 
     //gets coordinates of vertices  of the face depending on the direction of the face
