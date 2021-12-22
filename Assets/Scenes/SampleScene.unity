@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64853add67d684b4791f0ad3f788488b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 30, y: 10, z: 30}
+  gridSize: {x: 15, y: 10, z: 15}
   cellSize: 1
   floor: {fileID: 868793943}
 --- !u!4 &793912440
@@ -259,7 +259,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793912438}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.42, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 868793943}
@@ -285,7 +285,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -357,7 +357,7 @@ Transform:
   m_GameObject: {fileID: 868793942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -5.5, z: 0}
-  m_LocalScale: {x: 30, y: 1, z: 30}
+  m_LocalScale: {x: 15, y: 1, z: 15}
   m_Children: []
   m_Father: {fileID: 793912440}
   m_RootOrder: 0
@@ -473,9 +473,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.2
   far clip plane: 1000
-  field of view: 60
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -500,13 +500,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.000018998822, y: -0.8312293, z: 0.5559297, w: 0.00029519264}
-  m_LocalPosition: {x: 3.597808, y: 20.33804, z: 37.98996}
+  m_LocalRotation: {x: 0.23658378, y: 0, z: 0, w: 0.97161114}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1296980660}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -13.331, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 27.37, y: 0, z: 0}
 --- !u!1 &1296980658
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +517,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1296980660}
   - component: {fileID: 1296980659}
+  - component: {fileID: 1296980661}
+  - component: {fileID: 1296980662}
   m_Layer: 0
   m_Name: Player View
   m_TagString: Untagged
@@ -538,7 +540,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapGenerator: {fileID: 793912439}
   highlightObj: {fileID: 2181127474307216114, guid: 2f0bc314dd22d044388aa951774af810, type: 3}
-  timeBetweenAction: 0.1
+  invalidMat: {fileID: 2100000, guid: 568864a718e52fb41adc4f67cac23076, type: 2}
+  validMat: {fileID: 2100000, guid: 7fea9a305ef51fc4dba9759c52ea9f03, type: 2}
+  projectionObj: {fileID: 6205412814275480418, guid: 2341353649f67b64881f6f2d5c5cdbef, type: 3}
 --- !u!4 &1296980660
 Transform:
   m_ObjectHideFlags: 0
@@ -546,11 +550,44 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296980658}
-  m_LocalRotation: {x: 0.25571164, y: -0, z: -0, w: 0.9667531}
-  m_LocalPosition: {x: 0, y: 7.82, z: -22.54}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.52, z: -10.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963194228}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 29.632, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &1296980661
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296980658}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 0
+  m_Radius: 0.4
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1296980662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296980658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca32df9277f0b044e81bed8ca99add04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  mouseSensitivity: 5
+  cam: {fileID: 963194228}

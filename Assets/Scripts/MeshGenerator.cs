@@ -1,96 +1,119 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public static class MeshGenerator
 {
-    static List<int> triangles;
-    static int vertCount;
-    static List<Vector3> vertices;
+    static List<List<int>> triangles = new List<List<int>>();
+    static int subMeshCount = 0;
+    static int vertCount = 0;
+    static List<Vector3> vertices = new List<Vector3>();
     static Grid grid;
-    public static Mesh CreateMesh(Grid _grid){
-        grid = _grid;
-        triangles = new List<int>();
-        vertCount = 0;
-        vertices = new List<Vector3>();
+    static Dictionary<Material,int> matDict = new Dictionary<Material, int>();
 
+    public static Mesh CreateMesh(Grid _grid, out Material[] materials){
+        grid = _grid;
         for(int x = 0; x < grid.gridSize.x; x++){
             for(int y = 0; y < grid.gridSize.y; y++){
                 for(int z = 0; z < grid.gridSize.z; z++){
-                    if(grid.cells[x,y,z] != GridContent.empty){
-                        RenderSides(new Vector3Int(x,y,z));
+                    if(grid.cells[x,y,z].content != GridContent.empty){
+                        RenderSides(new Vector3Int(x,y,z), grid.cells[x,y,z] );
                     }
                 }
             }
         }
+        List<Material> mats = new List<Material>();
+        foreach(var key in matDict.Keys){
+            mats.Add(key);
+        }
+        materials = mats.ToArray();
+
         Mesh mesh = new Mesh();
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();        
+        mesh.vertices = vertices.ToArray();  
+        mesh.subMeshCount = subMeshCount;
+        for(int i = 0; i < subMeshCount; i++){
+            mesh.SetTriangles(triangles[i].ToArray(), i);
+        } 
         mesh.RecalculateNormals();
+
+        ResetVariables();        
 
         return mesh;
     }
 
-    static void RenderSides(Vector3Int cell){
+
+    public static Mesh CreateMesh(GridInfo objInfo, float size){
+        foreach(var dir in GridInfo.contentShape[objInfo.content].faces.Keys){
+            AddFace(Vector3.zero, size, dir, objInfo);
+        }
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles[0].ToArray(); 
+        mesh.RecalculateNormals();
+
+        ResetVariables();
+
+        return mesh;
+    }
+
+    static void ResetVariables(){
+        vertices.Clear();
+        triangles.Clear();
+        matDict.Clear();
+        subMeshCount = 0;
+        vertCount = 0;
+    }
+
+    static void RenderSides(Vector3Int cell, GridInfo cellInfo){
         //checking all sides of the square to decide wheather a mesh should be assigned
+        
         List<Vector3Int[]> neighbours = grid.GetNeighbours(cell);
+        HashSet<Vector3> unrenderedFaces = new HashSet<Vector3>();
         foreach(Vector3Int[] nbr in neighbours){
-            if(nbr[1] == Vector3Int.one * -1 || grid.cells[nbr[1].x, nbr[1].y, nbr[1].z] == GridContent.empty){
-                List<Vector3> verts = GetFaceVertices(cell, nbr[0]);
-                AssignVertices(verts);
+            if(nbr[1] == Vector3.one * -1) continue;
+            GridContent content = grid.GetCell(nbr[1]).content;
+              //future optimisation: add way of detecting if overlapping faces for pyramid and prism use cases
+            if(content != GridContent.empty && content!= GridContent.pyramid && content != GridContent.prism){
+                unrenderedFaces.Add(nbr[0]);
+            }
+        }
+
+        foreach(var key in GridInfo.contentShape[cellInfo.content].faces.Keys){
+            if(!unrenderedFaces.Contains(key)){
+                AddFace(grid.GridToWorld(cell, true), grid.cellSize, key, cellInfo);
             }
         }
     }
 
-    //adding vertices to a (coordinate, index) dictionary to avoid repitition of vertices
-    static void AssignVertices(List<Vector3> verts){
-        foreach(Vector3 vert in verts){
-            vertices.Add(vert);
-        }
-        CreateTriangle(vertices.Count - 4, vertices.Count - 3, vertices.Count - 2);
-        CreateTriangle(vertices.Count - 4, vertices.Count - 2, vertices.Count - 1);
-    }
-
-    static void CreateTriangle(int a, int b, int c){
-        triangles.Add(a);
-        triangles.Add(b);
-        triangles.Add(c);  
-    }
-
     //gets coordinates of vertices  of the face depending on the direction of the face
-    static List<Vector3> GetFaceVertices(Vector3Int cell, Vector3Int dir){
+    static void AddFace(Vector3 center, float size, Vector3 dir, GridInfo cellInfo){
 
-        List<Vector3> verts; 
-        Vector3 cellPos = grid.GridToWorld(cell, true, dir);
-        float halfCell = grid.cellSize/2;
+        Shape shape = GridInfo.contentShape[cellInfo.content];
+        Vector3[] verts = shape.vertices;
 
-        if(dir == Vector3Int.up || dir == Vector3Int.down){
-            verts = new List<Vector3>{
-                new Vector3(cellPos.x + halfCell, cellPos.y, cellPos.z + halfCell),
-                new Vector3(cellPos.x + halfCell, cellPos.y, cellPos.z - halfCell),
-                new Vector3(cellPos.x - halfCell, cellPos.y, cellPos.z - halfCell),
-                new Vector3(cellPos.x - halfCell, cellPos.y, cellPos.z + halfCell),
-            };
-        }
-        else if(dir == Vector3Int.left || dir == Vector3Int.right){
-            verts = new List<Vector3>{
-                new Vector3(cellPos.x, cellPos.y  + halfCell, cellPos.z + halfCell),
-                new Vector3(cellPos.x, cellPos.y  - halfCell, cellPos.z + halfCell),
-                new Vector3(cellPos.x , cellPos.y - halfCell, cellPos.z - halfCell),
-                new Vector3(cellPos.x, cellPos.y + halfCell, cellPos.z - halfCell),
-            };
-        }
-        else{
-            verts = new List<Vector3>{
-                new Vector3(cellPos.x  + halfCell, cellPos.y  + halfCell, cellPos.z),
-                new Vector3(cellPos.x - halfCell, cellPos.y  + halfCell, cellPos.z ),
-                new Vector3(cellPos.x - halfCell , cellPos.y - halfCell, cellPos.z),
-                new Vector3(cellPos.x + halfCell, cellPos.y - halfCell, cellPos.z),
-            };
+        int[] faceTriangles = shape.faces[dir];
+        HashSet<int> vertsToAdd = new HashSet<int>(faceTriangles);
+        Dictionary<int, int> oldToNewIndex = new Dictionary<int, int>();
+
+        for(int i = 0; i < verts.Length; i++){
+            if(vertsToAdd.Contains(i)){
+                Vector3 newVertex = cellInfo.rotation * verts[i] * size + center;
+                vertices.Add(newVertex);
+                oldToNewIndex.Add(i, vertCount);
+                vertCount++;
+            }
         }
 
-        if(dir.x < 0 || dir.y < 0 || dir.z < 0) verts.Reverse();
+        Material mat = cellInfo.material;
+        if(!matDict.ContainsKey(mat)){
+            matDict.Add(mat, subMeshCount);
+            triangles.Add(new List<int>());
+            subMeshCount++;
+        }
 
-        return verts;
+        for(int i = 0; i < faceTriangles.Length; i++){
+            triangles[matDict[mat]].Add(oldToNewIndex[faceTriangles[i]]);
+        }
     }
 }
