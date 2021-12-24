@@ -251,6 +251,8 @@ MonoBehaviour:
   gridSize: {x: 15, y: 10, z: 15}
   cellSize: 1
   floor: {fileID: 868793943}
+  mapMaterials:
+  - {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
 --- !u!4 &793912440
 Transform:
   m_ObjectHideFlags: 0
@@ -435,6 +437,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -507,6 +510,39 @@ Transform:
   m_Father: {fileID: 1296980660}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 27.37, y: 0, z: 0}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &1296980658
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,10 +575,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapGenerator: {fileID: 793912439}
-  highlightObj: {fileID: 2181127474307216114, guid: 2f0bc314dd22d044388aa951774af810, type: 3}
+  highlightObj: {fileID: 6645173601695025496, guid: 40e9142d2f389cb4d89fe504c46be998, type: 3}
   invalidMat: {fileID: 2100000, guid: 568864a718e52fb41adc4f67cac23076, type: 2}
   validMat: {fileID: 2100000, guid: 7fea9a305ef51fc4dba9759c52ea9f03, type: 2}
   projectionObj: {fileID: 6205412814275480418, guid: 2341353649f67b64881f6f2d5c5cdbef, type: 3}
+  defaultMat: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
+  color: {r: 0.4433962, g: 0.41578853, b: 0.41578853, a: 0}
 --- !u!4 &1296980660
 Transform:
   m_ObjectHideFlags: 0

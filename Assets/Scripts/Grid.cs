@@ -6,7 +6,7 @@ using UnityEngine;
 public class Grid {
     public GridInfo[,,] cells;
     public float cellSize;
-    public Vector3 gridSize;
+    public Vector3Int gridSize;
     public Vector3 worldSize;
     public Vector3 worldPos;
 
@@ -54,6 +54,10 @@ public class Grid {
         return cells[point.x, point.y, point.z];
     }
 
+    public void SetCell(Vector3Int point, GridInfo gridInfo){
+        cells[point.x, point.y, point.z] = gridInfo;
+    }
+
     //returns a list of arrays of size 2 where the [0] is direction, and [1] the neighbooring cell
     //if there is no neighbour, direction will be set to a negative vector3.one
     public List<Vector3Int[]> GetNeighbours(Vector3Int cell){
@@ -86,6 +90,7 @@ public class GridInfo
     public GridContent content;
     public Quaternion rotation; 
     public Material material;
+    public Color color;
 
     public static Dictionary<GridContent, Shape> contentShape = new  Dictionary<GridContent, Shape>{
         {GridContent.block, Shape.cube},
@@ -93,12 +98,13 @@ public class GridInfo
         {GridContent.pyramid, Shape.pyramid},
     };
 
-    public static GridInfo Empty = new GridInfo(GridContent.empty, Quaternion.identity, null);
+    public static GridInfo Empty = new GridInfo(GridContent.empty, Quaternion.identity, null, Color.black);
 
-    public GridInfo(GridContent _content, Quaternion _rotation, Material _material){
+    public GridInfo(GridContent _content, Quaternion _rotation, Material _material, Color _color){
         content = _content;
         rotation = _rotation;
         material = _material;
+        color = _color;
     }
 
 }

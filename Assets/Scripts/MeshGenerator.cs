@@ -9,6 +9,7 @@ public static class MeshGenerator
     static int subMeshCount = 0;
     static int vertCount = 0;
     static List<Vector3> vertices = new List<Vector3>();
+    static List<Color> colors = new List<Color>();
     static Grid grid;
     static Dictionary<Material,int> matDict = new Dictionary<Material, int>();
 
@@ -31,6 +32,7 @@ public static class MeshGenerator
 
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();  
+        mesh.colors = colors.ToArray();
         mesh.subMeshCount = subMeshCount;
         for(int i = 0; i < subMeshCount; i++){
             mesh.SetTriangles(triangles[i].ToArray(), i);
@@ -53,7 +55,6 @@ public static class MeshGenerator
         mesh.RecalculateNormals();
 
         ResetVariables();
-
         return mesh;
     }
 
@@ -61,6 +62,7 @@ public static class MeshGenerator
         vertices.Clear();
         triangles.Clear();
         matDict.Clear();
+        colors.Clear();
         subMeshCount = 0;
         vertCount = 0;
     }
@@ -100,6 +102,7 @@ public static class MeshGenerator
             if(vertsToAdd.Contains(i)){
                 Vector3 newVertex = cellInfo.rotation * verts[i] * size + center;
                 vertices.Add(newVertex);
+                colors.Add(cellInfo.color);
                 oldToNewIndex.Add(i, vertCount);
                 vertCount++;
             }

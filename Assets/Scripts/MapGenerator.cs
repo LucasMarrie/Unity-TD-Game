@@ -10,8 +10,8 @@ public class MapGenerator : MonoBehaviour
     public Vector3Int gridSize = new Vector3Int(30, 10, 30);
     public float cellSize = 1f;
     public Transform floor;
+    public Material[] mapMaterials;
 
-    [System.NonSerialized]
     Grid grid;
     Mesh mesh;
     MeshFilter meshFilter;
@@ -20,6 +20,8 @@ public class MapGenerator : MonoBehaviour
 
     void Awake()
     {
+        GridData.InitMaterials(mapMaterials);
+
         meshFilter = GetComponent<MeshFilter>();
         meshCollider = GetComponent<MeshCollider>();
         meshRenderer = GetComponent<MeshRenderer>();
@@ -28,23 +30,7 @@ public class MapGenerator : MonoBehaviour
 
         grid = new Grid(transform.position, gridSize, cellSize);
         UpdateMesh();
-    }
-
-
-    void Start(){
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void OnDrawGizmos(){
-        Gizmos.color = Color.grey;
-        Gizmos.DrawCube(transform.position + Vector3.down * (gridSize.y + 1)/2 * cellSize, new Vector3(gridSize.x, 1, gridSize.z) * cellSize);
-    }
+    }   
 
     void UpdateMesh(){
         Material[] materials;
@@ -52,11 +38,10 @@ public class MapGenerator : MonoBehaviour
         meshFilter.mesh = mesh;
         meshCollider.sharedMesh = mesh;
         meshRenderer.materials = materials;
-
     }
 
-    public void AddBlock(Vector3Int cell, GridContent blockType, Quaternion rotation, Material material){
-        GridInfo gridInfo = new GridInfo(blockType, rotation, material);
+    public void AddBlock(Vector3Int cell, GridContent blockType, Quaternion rotation, Material material, Color color){
+        GridInfo gridInfo = new GridInfo(blockType, rotation, material, color);
         grid.cells[cell.x, cell.y, cell.z] = gridInfo;
         UpdateMesh();
     }
@@ -68,6 +53,11 @@ public class MapGenerator : MonoBehaviour
 
     public Grid GetGrid(){
         return grid;
+    }
+
+    public void SetGrid(Grid _grid){
+        grid = _grid;
+        UpdateMesh();
     }
 
 }

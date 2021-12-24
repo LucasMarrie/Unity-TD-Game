@@ -18,6 +18,7 @@ public class MapEditor : MonoBehaviour
     MeshFilter projectionMesh;
     [Header("Debugging")]
     public Material defaultMat;
+    public Color color;
 
     float timeBetweenAction = 0.15f;
     float nextActionTime;
@@ -104,7 +105,7 @@ public class MapEditor : MonoBehaviour
                         if(hit.distance > minPlaceDistance){
                             PositionHighlight(topCell, -normal, HighlighType.valid, EditType.Add);
                             if(Input.GetButton("Fire1") && Time.time >= nextActionTime){
-                                mapGenerator.AddBlock(topCell, selectedBlock, rotation, defaultMat);
+                                mapGenerator.AddBlock(topCell, selectedBlock, rotation, defaultMat, color);
                                 nextActionTime = Time.time + timeBetweenAction;
                             }     
                         ProjectObject(topCell, rotation);
@@ -178,7 +179,8 @@ public class MapEditor : MonoBehaviour
     }
 
     void UpdateProjectionMesh(){
-        projectionMesh.mesh = MeshGenerator.CreateMesh(new GridInfo(selectedBlock, Quaternion.identity, projectionObj.GetComponent<Material>()), mapGenerator.cellSize);
+        Material projectionMat = projectionObj.GetComponent<MeshRenderer>().material;
+        projectionMesh.mesh = MeshGenerator.CreateMesh(new GridInfo(selectedBlock, Quaternion.identity, projectionMat, projectionMat.color), mapGenerator.cellSize);
     }
 
     void PositionHighlight(Vector3Int cell, Vector3 normal, HighlighType hltType, EditType editTpye){
