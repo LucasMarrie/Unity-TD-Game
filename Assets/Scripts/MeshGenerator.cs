@@ -10,15 +10,15 @@ public static class MeshGenerator
     static int vertCount = 0;
     static List<Vector3> vertices = new List<Vector3>();
     static List<Color> colors = new List<Color>();
-    static Grid grid;
+    static MapGrid grid;
     static Dictionary<Material,int> matDict = new Dictionary<Material, int>();
 
-    public static Mesh CreateMesh(Grid _grid, out Material[] materials){
+    public static Mesh CreateMesh(MapGrid _grid, out Material[] materials){
         grid = _grid;
         for(int x = 0; x < grid.gridSize.x; x++){
             for(int y = 0; y < grid.gridSize.y; y++){
                 for(int z = 0; z < grid.gridSize.z; z++){
-                    if(grid.cells[x,y,z].content != GridContent.empty){
+                    if(grid.cells[x,y,z].blockData.content != BlockContent.empty){
                         RenderSides(new Vector3Int(x,y,z), grid.cells[x,y,z] );
                     }
                 }
@@ -46,7 +46,7 @@ public static class MeshGenerator
 
 
     public static Mesh CreateMesh(GridInfo objInfo, float size){
-        foreach(var dir in GridInfo.contentShape[objInfo.content].faces.Keys){
+        foreach(var dir in ShapeData.shapeDict[objInfo.shape].faces.Keys){
             AddFace(Vector3.zero, size, dir, objInfo);
         }
         Mesh mesh = new Mesh();
@@ -74,14 +74,16 @@ public static class MeshGenerator
         HashSet<Vector3> unrenderedFaces = new HashSet<Vector3>();
         foreach(Vector3Int[] nbr in neighbours){
             if(nbr[1] == Vector3.one * -1) continue;
-            GridContent content = grid.GetCell(nbr[1]).content;
+            GridInfo nbrCell = grid.GetCell(nbr[1]);
+            BlockContent content = nbrCell.blockData.content;
+            Shape shape = nbrCell.shape;
               //future optimisation: add way of detecting if overlapping faces for pyramid and prism use cases
-            if(content != GridContent.empty && content!= GridContent.pyramid && content != GridContent.prism){
+            if(content != BlockContent.empty && shape != Shape.pyramid && shape != Shape.prism){
                 unrenderedFaces.Add(nbr[0]);
             }
         }
 
-        foreach(var key in GridInfo.contentShape[cellInfo.content].faces.Keys){
+        foreach(var key in ShapeData.shapeDict[cellInfo.shape].faces.Keys){
             if(!unrenderedFaces.Contains(key)){
                 AddFace(grid.GridToWorld(cell, true), grid.cellSize, key, cellInfo);
             }
@@ -91,24 +93,25 @@ public static class MeshGenerator
     //gets coordinates of vertices  of the face depending on the direction of the face
     static void AddFace(Vector3 center, float size, Vector3 dir, GridInfo cellInfo){
 
-        Shape shape = GridInfo.contentShape[cellInfo.content];
+        BlockData blockData = cellInfo.blockData;
+        ShapeData shape = ShapeData.shapeDict[cellInfo.shape];
         Vector3[] verts = shape.vertices;
 
         int[] faceTriangles = shape.faces[dir];
         HashSet<int> vertsToAdd = new HashSet<int>(faceTriangles);
         Dictionary<int, int> oldToNewIndex = new Dictionary<int, int>();
-
+        
         for(int i = 0; i < verts.Length; i++){
             if(vertsToAdd.Contains(i)){
                 Vector3 newVertex = cellInfo.rotation * verts[i] * size + center;
                 vertices.Add(newVertex);
-                colors.Add(cellInfo.color);
+                colors.Add(blockData.color);
                 oldToNewIndex.Add(i, vertCount);
                 vertCount++;
             }
         }
 
-        Material mat = cellInfo.material;
+        Material mat = blockData.material;
         if(!matDict.ContainsKey(mat)){
             matDict.Add(mat, subMeshCount);
             triangles.Add(new List<int>());

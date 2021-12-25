@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshCollider))]
 
 public class MapGenerator : MonoBehaviour
 {
+    //map loading data
+    public static string mapName = "";
+    public static bool customMap = false;
+
+    public BlockList blockDataList;
     public Vector3Int gridSize = new Vector3Int(30, 10, 30);
     public float cellSize = 1f;
     public Transform floor;
-    public Material[] mapMaterials;
 
-    Grid grid;
+    
+
+    MapGrid grid;
     Mesh mesh;
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
@@ -20,15 +27,25 @@ public class MapGenerator : MonoBehaviour
 
     void Awake()
     {
-        GridData.InitMaterials(mapMaterials);
+        BlockList.blockDataList = blockDataList.blocks;
+        GridData.InitBlockData();
 
         meshFilter = GetComponent<MeshFilter>();
         meshCollider = GetComponent<MeshCollider>();
         meshRenderer = GetComponent<MeshRenderer>();
+        if(File.Exists((customMap ? GridData.customMapsPath : GridData.mapdataPath) + "/" + mapName)){
+            grid = GridData.LoadGrid(mapName, false);
+            transform.position = grid.worldPos;
+            gridSize = grid.gridSize;
+            cellSize = grid.cellSize;
+        }
+        else
+        {
+            grid = new MapGrid(transform.position, gridSize, cellSize);
+        }
         floor.position = transform.position + Vector3.down * (gridSize.y + 1)/2 * cellSize;
         floor.localScale = new Vector3(gridSize.x, 1, gridSize.z) * cellSize;
 
-        grid = new Grid(transform.position, gridSize, cellSize);
         UpdateMesh();
     }   
 
@@ -40,9 +57,9 @@ public class MapGenerator : MonoBehaviour
         meshRenderer.materials = materials;
     }
 
-    public void AddBlock(Vector3Int cell, GridContent blockType, Quaternion rotation, Material material, Color color){
-        GridInfo gridInfo = new GridInfo(blockType, rotation, material, color);
-        grid.cells[cell.x, cell.y, cell.z] = gridInfo;
+    public void AddBlock(Vector3Int cell, BlockData blockData, Quaternion rotation, Shape shape){
+        GridInfo gridInfo = new GridInfo(blockData, rotation, shape);
+        grid.SetCell(cell, gridInfo);
         UpdateMesh();
     }
 
@@ -51,11 +68,11 @@ public class MapGenerator : MonoBehaviour
         UpdateMesh();
     }
 
-    public Grid GetGrid(){
+    public MapGrid GetGrid(){
         return grid;
     }
 
-    public void SetGrid(Grid _grid){
+    public void SetGrid(MapGrid _grid){
         grid = _grid;
         UpdateMesh();
     }

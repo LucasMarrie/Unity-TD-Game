@@ -248,11 +248,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64853add67d684b4791f0ad3f788488b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockDataList: {fileID: 11400000, guid: 0287e9fc3450a5d499ae773ac94af4ce, type: 2}
   gridSize: {x: 15, y: 10, z: 15}
   cellSize: 1
   floor: {fileID: 868793943}
-  mapMaterials:
-  - {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
 --- !u!4 &793912440
 Transform:
   m_ObjectHideFlags: 0
@@ -579,8 +578,6 @@ MonoBehaviour:
   invalidMat: {fileID: 2100000, guid: 568864a718e52fb41adc4f67cac23076, type: 2}
   validMat: {fileID: 2100000, guid: 7fea9a305ef51fc4dba9759c52ea9f03, type: 2}
   projectionObj: {fileID: 6205412814275480418, guid: 2341353649f67b64881f6f2d5c5cdbef, type: 3}
-  defaultMat: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
-  color: {r: 0.4433962, g: 0.41578853, b: 0.41578853, a: 0}
 --- !u!4 &1296980660
 Transform:
   m_ObjectHideFlags: 0

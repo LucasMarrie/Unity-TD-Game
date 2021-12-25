@@ -14,18 +14,18 @@ public class MapEditor : MonoBehaviour
     bool showHighlight = false;
 
     public GameObject projectionObj;
+    BlockData projectionData;
     bool showProjection = false;
     MeshFilter projectionMesh;
-    [Header("Debugging")]
-    public Material defaultMat;
-    public Color color;
 
     float timeBetweenAction = 0.15f;
     float nextActionTime;
 
-    Grid grid;
+    MapGrid grid;
     EditType selectedEdit = EditType.Add;
-    GridContent selectedBlock = GridContent.block;
+    BlockData selectedBlock;
+    Shape selectedShape;
+
     float minPlaceDistance;
 
     Dictionary<Vector3,Vector3[]> relFace = new Dictionary<Vector3,Vector3[]>{
@@ -43,13 +43,22 @@ public class MapEditor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        selectedBlock = BlockList.blockDataList[0];
+        selectedShape = selectedBlock.shapes[0];
+
         grid = mapGenerator.GetGrid();
+
         highlightObj = GameObject.Instantiate(highlightObj, Vector3.zero, Quaternion.identity);
         highlightObj.SetActive(false);
         highlighMesh = highlightObj.GetComponent<MeshRenderer>();
 
         projectionObj = GameObject.Instantiate(projectionObj, Vector3.zero, Quaternion.identity);
         projectionMesh = projectionObj.GetComponent<MeshFilter>();
+        projectionData = new BlockData{
+            name = "Projection",
+            content = BlockContent.empty,
+            material = projectionObj.GetComponent<MeshRenderer>().material,
+        };
         UpdateProjectionMesh();
         projectionObj.SetActive(false);
 
@@ -69,14 +78,14 @@ public class MapEditor : MonoBehaviour
         float mouseDelta = Input.GetAxis("Mouse ScrollWheel");
         if(mouseDelta != 0){
             if(mouseDelta < 0){
-                selectedBlock--;
+                selectedShape--;
             }else{
-                selectedBlock++;
+                selectedShape++;
             }
-
-            if((int)selectedBlock < 1) selectedBlock = GridContent.pyramid;
-            else if((int) selectedBlock > 3) selectedBlock = GridContent.block;
-            Debug.Log(selectedBlock); 
+            int lastIndex = selectedBlock.shapes.Length - 1;
+            if((int)selectedShape < 0) selectedShape = (Shape)lastIndex;
+            else if((int) selectedShape > lastIndex) selectedShape = 0;
+            Debug.Log(selectedShape); 
             UpdateProjectionMesh();
         }
         
@@ -101,11 +110,11 @@ public class MapEditor : MonoBehaviour
             }
             
             if(selectedEdit == EditType.Add){
-                if(topCell != Vector3Int.one * -1 && grid.GetCell(topCell).content == GridContent.empty){
+                if(topCell != Vector3Int.one * -1 && grid.GetCell(topCell).blockData.content == BlockContent.empty){
                         if(hit.distance > minPlaceDistance){
                             PositionHighlight(topCell, -normal, HighlighType.valid, EditType.Add);
                             if(Input.GetButton("Fire1") && Time.time >= nextActionTime){
-                                mapGenerator.AddBlock(topCell, selectedBlock, rotation, defaultMat, color);
+                                mapGenerator.AddBlock(topCell, selectedBlock, rotation, selectedShape);
                                 nextActionTime = Time.time + timeBetweenAction;
                             }     
                         ProjectObject(topCell, rotation);
@@ -180,7 +189,8 @@ public class MapEditor : MonoBehaviour
 
     void UpdateProjectionMesh(){
         Material projectionMat = projectionObj.GetComponent<MeshRenderer>().material;
-        projectionMesh.mesh = MeshGenerator.CreateMesh(new GridInfo(selectedBlock, Quaternion.identity, projectionMat, projectionMat.color), mapGenerator.cellSize);
+
+        projectionMesh.mesh = MeshGenerator.CreateMesh(new GridInfo(projectionData, Quaternion.identity, selectedShape), mapGenerator.cellSize);
     }
 
     void PositionHighlight(Vector3Int cell, Vector3 normal, HighlighType hltType, EditType editTpye){

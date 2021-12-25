@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0020b82fc8b6b744aa51283c5d25fb22, type: 3}
+  m_Name: MapBlocks
+  m_EditorClassIdentifier: 
+  blocks:
+  - name: Cement Block
+    content: 1
+    shapes: 010000000200000003000000
+    material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
+    color: {r: 0.3018868, g: 0.24891421, b: 0.24891421, a: 0}
