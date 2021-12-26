@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapEditor : MonoBehaviour
 {
-    public MapGenerator mapGenerator;
+    MapGenerator map;
 
     [Header("Visualisation Objects")]
     public GameObject highlightObj;
@@ -46,7 +46,8 @@ public class MapEditor : MonoBehaviour
         selectedBlock = BlockList.blockDataList[0];
         selectedShape = selectedBlock.shapes[0];
 
-        grid = mapGenerator.GetGrid();
+        map = MapGenerator.map;
+        grid = map.GetGrid();
 
         highlightObj = GameObject.Instantiate(highlightObj, Vector3.zero, Quaternion.identity);
         highlightObj.SetActive(false);
@@ -114,7 +115,7 @@ public class MapEditor : MonoBehaviour
                         if(hit.distance > minPlaceDistance){
                             PositionHighlight(topCell, -normal, HighlighType.valid, EditType.Add);
                             if(Input.GetButton("Fire1") && Time.time >= nextActionTime){
-                                mapGenerator.AddBlock(topCell, selectedBlock, rotation, selectedShape);
+                                map.AddBlock(topCell, selectedBlock, rotation, selectedShape);
                                 nextActionTime = Time.time + timeBetweenAction;
                             }     
                         ProjectObject(topCell, rotation);
@@ -127,7 +128,7 @@ public class MapEditor : MonoBehaviour
                 if(bottomCell != Vector3.one * -1){
                     PositionHighlight(bottomCell, normal, HighlighType.invalid, EditType.Delete);
                     if(Input.GetButton("Fire1") && Time.time >= nextActionTime){
-                        mapGenerator.DeleteBlock(bottomCell);
+                        map.DeleteBlock(bottomCell);
                         nextActionTime = Time.time + timeBetweenAction;
                     }
                 }
@@ -142,7 +143,7 @@ public class MapEditor : MonoBehaviour
         if(!straightAngles.Contains(normal)){
             foreach(Vector3 straightAngle in straightAngles){
                 if(Mathf.Abs(Vector3.Angle(straightAngle, normal)) <= 60){
-                    if(grid.WorldToGrid(position - normal * 0.01f) == grid.WorldToGrid(position - straightAngle * mapGenerator.cellSize/2))
+                    if(grid.WorldToGrid(position - normal * 0.01f) == grid.WorldToGrid(position - straightAngle * grid.cellSize/2))
                         return straightAngle;
                 }
             }
@@ -190,7 +191,7 @@ public class MapEditor : MonoBehaviour
     void UpdateProjectionMesh(){
         Material projectionMat = projectionObj.GetComponent<MeshRenderer>().material;
 
-        projectionMesh.mesh = MeshGenerator.CreateMesh(new GridInfo(projectionData, Quaternion.identity, selectedShape), mapGenerator.cellSize);
+        projectionMesh.mesh = MeshGenerator.CreateMesh(new GridInfo(projectionData, Quaternion.identity, selectedShape), grid.cellSize);
     }
 
     void PositionHighlight(Vector3Int cell, Vector3 normal, HighlighType hltType, EditType editTpye){

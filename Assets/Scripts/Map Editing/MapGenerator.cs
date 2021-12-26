@@ -12,12 +12,13 @@ public class MapGenerator : MonoBehaviour
     public static string mapName = "";
     public static bool customMap = false;
 
-    public BlockList blockDataList;
+    public BlockList blockList;
     public Vector3Int gridSize = new Vector3Int(30, 10, 30);
     public float cellSize = 1f;
     public Transform floor;
 
-    
+    //singleton
+    public static MapGenerator map;
 
     MapGrid grid;
     Mesh mesh;
@@ -27,7 +28,8 @@ public class MapGenerator : MonoBehaviour
 
     void Awake()
     {
-        BlockList.blockDataList = blockDataList.blocks;
+        map = this; //set singleton
+        BlockList.blockDataList = blockList.blocks;
         GridData.InitBlockData();
 
         meshFilter = GetComponent<MeshFilter>();
@@ -38,14 +40,13 @@ public class MapGenerator : MonoBehaviour
             transform.position = grid.worldPos;
             gridSize = grid.gridSize;
             cellSize = grid.cellSize;
-        }
-        else
-        {
+        }else{
             grid = new MapGrid(transform.position, gridSize, cellSize);
         }
-        floor.position = transform.position + Vector3.down * (gridSize.y + 1)/2 * cellSize;
-        floor.localScale = new Vector3(gridSize.x, 1, gridSize.z) * cellSize;
-
+        if(floor != null){
+            floor.position = transform.position + Vector3.down * (gridSize.y + 1)/2 * cellSize;
+            floor.localScale = new Vector3(gridSize.x, 1, gridSize.z) * cellSize;
+        }
         UpdateMesh();
     }   
 
