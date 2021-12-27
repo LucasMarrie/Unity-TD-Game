@@ -45,6 +45,7 @@
      <Compile Include="Assets\Scripts\Grid Classes\MapGrid.cs" />
      <Compile Include="Assets\Scripts\Map Editing\MapGenerator.cs" />
      <Compile Include="Assets\Scripts\Pathfinding\PathNode.cs" />
+     <Compile Include="Assets\Scripts\Pathfinding\Pathfinding.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity 2020.3.22f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

@@ -69,8 +69,8 @@ public class PathNode
     public void RevalidateNode(int height){
         if(!ValidNode(gridPos, normal, height)){
             nodes.Remove(gridPos);
-            foreach(PathNode node in neighbours){
-                node.SetNeighbours();
+            foreach(PathNode neighbour in neighbours){
+                neighbour.neighbours.Remove(this);
             }
         }
     }
@@ -93,7 +93,7 @@ public class PathNode
             if(!grid.InBounds(tempPos)){
                 return false;
             }else if(!passableContent.Contains(tempCell.blockData.content)){
-                if(normal == Vector3Int.zero || !ShapeData.shapeDict[tempCell.shape].traversableNormals.Contains(-normal)){
+                if(normal == Vector3Int.zero || ShapeData.shapeDict[tempCell.shape].traversableNormal != -normal){
                     return false;
                 }
             }

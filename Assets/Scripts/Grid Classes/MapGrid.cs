@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 public class MapGrid {
@@ -20,13 +21,7 @@ public class MapGrid {
     }
 
     void ReInitialise(){
-        for(int x = 0; x < gridSize.x; x++){
-            for(int y = 0; y < gridSize.y; y++){
-                for(int z = 0; z < gridSize.z; z++){
-                    cells[x,y,z] = GridInfo.Empty;
-                }
-            }
-        }
+        LoopGrid((x,y,z) => {cells[x,y,z] = GridInfo.Empty;});
     }
 
     //side allows to pick the center of the desired face with a unit vector like Vector3.up
@@ -56,6 +51,16 @@ public class MapGrid {
 
     public void SetCell(Vector3Int point, GridInfo gridInfo){
         cells[point.x, point.y, point.z] = gridInfo;
+    }
+
+    public void LoopGrid(Action<int, int, int> action){
+        for(int x = 0; x < gridSize.x; x++){
+            for(int y = 0; y < gridSize.y; y++){
+                for(int z = 0; z < gridSize.z; z++){
+                    action(x,y,z);
+                }
+            }
+        }
     }
 
     //returns a list of arrays of size 2 where the [0] is direction, and [1] the neighbooring cell

@@ -20,6 +20,8 @@ public class MapGenerator : MonoBehaviour
     //singleton
     public static MapGenerator map;
 
+    public Pathfinding pathfinder;
+
     MapGrid grid;
     Mesh mesh;
     MeshFilter meshFilter;
@@ -29,6 +31,7 @@ public class MapGenerator : MonoBehaviour
     void Awake()
     {
         map = this; //set singleton
+
         BlockList.blockDataList = blockList.blocks;
         GridData.InitBlockData();
 
@@ -48,6 +51,9 @@ public class MapGenerator : MonoBehaviour
             floor.localScale = new Vector3(gridSize.x, 1, gridSize.z) * cellSize;
         }
         UpdateMesh();
+
+        pathfinder = GetComponent<Pathfinding>();
+        pathfinder.InnitPathfinder();
     }   
 
     void UpdateMesh(){

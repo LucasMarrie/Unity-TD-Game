@@ -15,15 +15,12 @@ public static class MeshGenerator
 
     public static Mesh CreateMesh(MapGrid _grid, out Material[] materials){
         grid = _grid;
-        for(int x = 0; x < grid.gridSize.x; x++){
-            for(int y = 0; y < grid.gridSize.y; y++){
-                for(int z = 0; z < grid.gridSize.z; z++){
-                    if(grid.cells[x,y,z].blockData.content != BlockContent.empty){
-                        RenderSides(new Vector3Int(x,y,z), grid.cells[x,y,z] );
-                    }
-                }
+        grid.LoopGrid((x, y, z) => {
+            if(grid.cells[x,y,z].blockData.content != BlockContent.empty){
+                RenderSides(new Vector3Int(x,y,z), grid.cells[x,y,z]);
             }
-        }
+        });
+
         List<Material> mats = new List<Material>();
         foreach(var key in matDict.Keys){
             mats.Add(key);
