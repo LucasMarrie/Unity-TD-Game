@@ -76,8 +76,9 @@ public class PathNode : IComparable<PathNode>
 
     public Quaternion VerticalRotation(){
         if(flat) return Quaternion.identity;
-        float angle = Vector3.Angle(Vector3.up, normal) * -(normal.x + normal.z);
-        Quaternion vertical = Quaternion.AngleAxis(angle, Vector3.forward);
+        Vector3 rotationAxis = Vector3.right * normal.z + Vector3.back * normal.x;
+        float angle = Vector3.Angle(Vector3.up, normal);
+        Quaternion vertical = Quaternion.AngleAxis(angle, rotationAxis);
         return vertical;
     }
     
