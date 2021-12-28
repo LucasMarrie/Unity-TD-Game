@@ -20,13 +20,17 @@ public class MapGenerator : MonoBehaviour
     //singleton
     public static MapGenerator map;
 
-    public Pathfinding pathfinder;
-
     MapGrid grid;
+    Pathfinding pathfinder;
     Mesh mesh;
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
     MeshCollider meshCollider;
+
+    [Header("Pathfinding test")]
+    public Vector3Int start;
+    public Vector3Int end;
+    public GameObject waypoint;
 
     void Awake()
     {
@@ -84,4 +88,24 @@ public class MapGenerator : MonoBehaviour
         UpdateMesh();
     }
 
+    public void TestPathfinder(){
+        pathfinder.InnitPathfinder();
+        var path = pathfinder.FindPath(start, end);
+        if(path == null){
+            Debug.Log("no path");
+        }else{
+            while(path.Count > 0){
+                var coord = path.Pop();
+                Instantiate(waypoint, coord.Item1, coord.Item2);
+                Debug.Log(coord.Item1 + "  |  " + coord.Item2);
+            }
+        }
+    }
+
+    void OnDrawGizmos(){
+        if(grid != null){
+            Gizmos.DrawCube(grid.GridToWorld(start), Vector3.one * cellSize);
+            Gizmos.DrawCube(grid.GridToWorld(end), Vector3.one * cellSize);
+        }
+    }
 }

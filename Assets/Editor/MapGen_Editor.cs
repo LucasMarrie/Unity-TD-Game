@@ -23,5 +23,9 @@ public class MapGen_Editor : Editor
         }
 
         GUILayout.EndHorizontal();
+
+        if(GUILayout.Button("Pathfind")){
+             mapgen.TestPathfinder();
+        }
     }
 }

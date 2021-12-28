@@ -5,7 +5,8 @@ using UnityEngine;
 public class MapEditor : MonoBehaviour
 {
     MapGenerator map;
-
+    Camera cam;
+    public LayerMask mapMask;
     [Header("Visualisation Objects")]
     public GameObject highlightObj;
     MeshRenderer highlighMesh;
@@ -24,6 +25,7 @@ public class MapEditor : MonoBehaviour
     MapGrid grid;
     EditType selectedEdit = EditType.Add;
     BlockData selectedBlock;
+    int shapeIndex = 0;
     Shape selectedShape;
 
     float minPlaceDistance;
@@ -44,10 +46,11 @@ public class MapEditor : MonoBehaviour
     void Start()
     {
         selectedBlock = BlockList.blockDataList[0];
-        selectedShape = selectedBlock.shapes[0];
+        selectedShape = selectedBlock.shapes[shapeIndex];
 
         map = MapGenerator.map;
         grid = map.GetGrid();
+        cam = Camera.main;
 
         highlightObj = GameObject.Instantiate(highlightObj, Vector3.zero, Quaternion.identity);
         highlightObj.SetActive(false);
@@ -79,13 +82,14 @@ public class MapEditor : MonoBehaviour
         float mouseDelta = Input.GetAxis("Mouse ScrollWheel");
         if(mouseDelta != 0){
             if(mouseDelta < 0){
-                selectedShape--;
+                shapeIndex--;
             }else{
-                selectedShape++;
+                shapeIndex++;
             }
             int lastIndex = selectedBlock.shapes.Length - 1;
-            if((int)selectedShape < 0) selectedShape = (Shape)lastIndex;
-            else if((int) selectedShape > lastIndex) selectedShape = 0;
+            if(shapeIndex < 0) shapeIndex = lastIndex;
+            else if(shapeIndex > lastIndex) shapeIndex = 0;
+            selectedShape = selectedBlock.shapes[shapeIndex];
             Debug.Log(selectedShape); 
             UpdateProjectionMesh();
         }
@@ -93,12 +97,12 @@ public class MapEditor : MonoBehaviour
     }
 
     void SelectSide(){
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         showHighlight = false;
         showProjection = false;
 
-        if(Physics.Raycast(ray, out hit)){
+        if(Physics.Raycast(ray, out hit, 100, mapMask)){
             Vector3 normal = StraightenNormal(hit.normal, hit.point);
             Vector3Int topCell = grid.WorldToGrid(hit.point + normal * 0.01f);
             Vector3Int bottomCell = grid.WorldToGrid(hit.point - normal * 0.01f);

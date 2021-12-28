@@ -226,10 +226,11 @@ GameObject:
   m_Component:
   - component: {fileID: 793912440}
   - component: {fileID: 793912439}
+  - component: {fileID: 793912444}
   - component: {fileID: 793912442}
   - component: {fileID: 793912441}
   - component: {fileID: 793912443}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Map
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,10 +249,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64853add67d684b4791f0ad3f788488b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockDataList: {fileID: 11400000, guid: 0287e9fc3450a5d499ae773ac94af4ce, type: 2}
+  blockList: {fileID: 11400000, guid: 0287e9fc3450a5d499ae773ac94af4ce, type: 2}
   gridSize: {x: 15, y: 10, z: 15}
   cellSize: 1
   floor: {fileID: 868793943}
+  start: {x: 0, y: 0, z: 0}
+  end: {x: 0, y: 0, z: 0}
+  waypoint: {fileID: 0}
 --- !u!4 &793912440
 Transform:
   m_ObjectHideFlags: 0
@@ -330,6 +334,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &793912444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793912438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be7b471672c15454cb2353d3b6ad7ecf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathHeight: 2
 --- !u!1 &868793942
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,7 +359,7 @@ GameObject:
   - component: {fileID: 868793946}
   - component: {fileID: 868793945}
   - component: {fileID: 868793944}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -573,7 +590,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e494ddfb23a3742aabd2539cb20a6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapGenerator: {fileID: 793912439}
   highlightObj: {fileID: 6645173601695025496, guid: 40e9142d2f389cb4d89fe504c46be998, type: 3}
   invalidMat: {fileID: 2100000, guid: 568864a718e52fb41adc4f67cac23076, type: 2}
   validMat: {fileID: 2100000, guid: 7fea9a305ef51fc4dba9759c52ea9f03, type: 2}

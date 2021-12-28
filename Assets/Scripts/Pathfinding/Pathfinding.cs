@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +11,7 @@ public class Pathfinding : MonoBehaviour
     public void InnitPathfinder(){
         map = MapGenerator.map;
         grid = map.GetGrid();
+        PathNode.grid = grid;
         SetNodes();
     }
 
@@ -55,5 +56,65 @@ public class Pathfinding : MonoBehaviour
         } 
     }
 
-    
+    //if no path was found it returns empty Stack
+    public Stack<Tuple<Vector3, Quaternion>> FindPath(Vector3Int start, Vector3Int goal){
+        Stack<Tuple<Vector3, Quaternion>> path = null;
+        if(!PathNode.nodes.ContainsKey(start) || !PathNode.nodes.ContainsKey(goal)){
+            return path;
+        }
+        Dictionary<PathNode, PathNode> parents = new Dictionary<PathNode, PathNode>();
+        Heap<PathNode> openSet = new Heap<PathNode>(PathNode.nodes.Count);
+        openSet.Add(PathNode.nodes[start]);
+        HashSet<PathNode> closedSet = new HashSet<PathNode>();
+
+        while(openSet.Count > 0){
+            PathNode node = openSet.Pop();
+            closedSet.Add(node);
+
+            if(node.gridPos == goal){
+                path = RetraceParents(start, node, parents);
+                break;
+            }
+
+            foreach(PathNode neighbour in node.neighbours){
+                if(closedSet.Contains(neighbour)) continue;
+                if(openSet.Contains(neighbour)){
+                    if(neighbour.UpdateGCost(node.gCost)){
+                        openSet.UpdateItem(neighbour);
+                        parents[neighbour] = node;
+                    }
+                }else{
+                    neighbour.SetGCost(node.gCost);
+                    neighbour.SetHCost(goal);
+                    openSet.Add(neighbour);
+                    parents.Add(neighbour, node);
+                }
+            }
+        }
+        PathNode.ResetCosts();
+        return path;
+    }
+
+    //returns in world movement waypoints and rotation to face once it reaches the node including the points in between each nodes
+    Stack<Tuple<Vector3, Quaternion>> RetraceParents(Vector3Int start, PathNode endNode, Dictionary<PathNode, PathNode> parents){
+        Stack<Tuple<Vector3, Quaternion>> path = new Stack<Tuple<Vector3, Quaternion>>();
+        PathNode current = endNode;
+        path.Push(PosRotPair(current.worldPos, Quaternion.identity));
+        while (current.gridPos != start)
+        {
+            Debug.Log(current.gridPos);
+            PathNode next = parents[current];
+            path.Push(PosRotPair(next.IntersectionPos(current), next.RotationTowards(current, true)));
+            path.Push(PosRotPair(next.worldPos, next.RotationTowards(current, false)));
+            current = next;    
+        }
+        Debug.Log(current.gridPos);
+        return path;
+    }
+
+    Tuple<Vector3, Quaternion> PosRotPair(Vector3 pos, Quaternion rot){
+        return new Tuple<Vector3, Quaternion>(pos, rot);
+    }
+
+
 }
