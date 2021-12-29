@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float mouseSensitivity = 5f;
     public Transform cam;
     CharacterController controller;
+    float verticalAngle = 0;
     float x;
     float z;
     float y;
@@ -39,7 +40,9 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetButton("Fire3")){
             Cursor.lockState = CursorLockMode.Confined;
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivity);
-            cam.Rotate(Vector3.left * Input.GetAxis("Mouse Y") * mouseSensitivity);
+            verticalAngle -= Input.GetAxis("Mouse Y") * mouseSensitivity;
+            verticalAngle = Mathf.Clamp(verticalAngle, -90f, 90f);
+            cam.localRotation = Quaternion.Euler(Vector3.right * verticalAngle);
         }else{
             Cursor.lockState = CursorLockMode.None;
         }
@@ -48,6 +51,6 @@ public class PlayerMovement : MonoBehaviour
     void MovePlayer()
     {
         Vector3 movementVector = (transform.forward * z + transform.up * y + transform.right * x) * speed; 
-         controller.Move(movementVector * Time.deltaTime);
+        controller.Move(movementVector * Time.deltaTime);
     }
 }

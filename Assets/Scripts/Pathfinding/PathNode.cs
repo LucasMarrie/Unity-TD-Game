@@ -9,6 +9,8 @@ public class PathNode : IComparable<PathNode>
     //BlockContents that can be walked on
     static HashSet<BlockContent> pathContent = new HashSet<BlockContent>{
         BlockContent.path,
+        BlockContent.start,
+        BlockContent.end
     };
     //BlockContents that can be walked through
     static HashSet<BlockContent> passableContent = new HashSet<BlockContent>{
@@ -29,7 +31,7 @@ public class PathNode : IComparable<PathNode>
         gridPos = _gridPos;
         normal = _normal;
         neighbours = new HashSet<PathNode>();
-        if(normal == Vector3Int.zero || normal.y < -1){
+        if(normal == Vector3Int.zero || normal.y < 0){
             flat = true;
         }else{
             flat = false;
@@ -150,9 +152,7 @@ public class PathNode : IComparable<PathNode>
             if(!grid.InBounds(tempPos)){
                 return false;
             }else if(!passableContent.Contains(tempCell.blockData.content)){
-                if(normal == Vector3Int.zero || ShapeData.shapeDict[tempCell.shape].traversableNormal != -normal){
-                    return false;
-                }
+                return false;
             }
         }
         return true;

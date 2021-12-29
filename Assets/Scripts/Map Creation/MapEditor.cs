@@ -19,11 +19,12 @@ public class MapEditor : MonoBehaviour
     bool showProjection = false;
     MeshFilter projectionMesh;
 
-    float timeBetweenAction = 0.15f;
+    public float timeBetweenAction = 0.15f;
     float nextActionTime;
 
     MapGrid grid;
     EditType selectedEdit = EditType.Add;
+    int blockIndex = 0;
     BlockData selectedBlock;
     int shapeIndex = 0;
     Shape selectedShape;
@@ -45,9 +46,6 @@ public class MapEditor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        selectedBlock = BlockList.blockDataList[0];
-        selectedShape = selectedBlock.shapes[shapeIndex];
-
         map = MapGenerator.map;
         grid = map.GetGrid();
         cam = Camera.main;
@@ -63,8 +61,8 @@ public class MapEditor : MonoBehaviour
             content = BlockContent.empty,
             material = projectionObj.GetComponent<MeshRenderer>().material,
         };
-        UpdateProjectionMesh();
         projectionObj.SetActive(false);
+        CycleBlock(0,0);
 
         minPlaceDistance = GetComponent<CharacterController>().radius + grid.cellSize;
     }
@@ -79,21 +77,39 @@ public class MapEditor : MonoBehaviour
             selectedEdit = EditType.Add;
         }
 
-        float mouseDelta = Input.GetAxis("Mouse ScrollWheel");
-        if(mouseDelta != 0){
-            if(mouseDelta < 0){
-                shapeIndex--;
-            }else{
-                shapeIndex++;
-            }
-            int lastIndex = selectedBlock.shapes.Length - 1;
-            if(shapeIndex < 0) shapeIndex = lastIndex;
-            else if(shapeIndex > lastIndex) shapeIndex = 0;
-            selectedShape = selectedBlock.shapes[shapeIndex];
-            Debug.Log(selectedShape); 
-            UpdateProjectionMesh();
+        if(Input.GetKeyDown(KeyCode.J)){
+            CycleBlock(0, -1);
+        }else if(Input.GetKeyDown(KeyCode.L)){
+            CycleBlock(0, 1);
+        }
+
+        if(Input.GetKeyDown(KeyCode.I)){
+            CycleBlock(-1, 0);
+        }else if(Input.GetKeyDown(KeyCode.K)){
+            CycleBlock(1, 0);
         }
         
+    }
+
+    void CycleBlock(int blockShift, int shapeShift){
+        blockIndex += blockShift;
+        int lastBlock = BlockList.blockList.Length - 1;
+        if(blockIndex < 0)
+            blockIndex = lastBlock;
+        else if(blockIndex > lastBlock)
+            blockIndex = 0;
+        selectedBlock = BlockList.blockList[blockIndex];
+
+        shapeIndex += shapeShift;
+        int lastShape = selectedBlock.shapes.Length - 1;
+        if(shapeIndex < 0) 
+            shapeIndex = lastShape;
+        else if(shapeIndex > lastShape) 
+            shapeIndex = 0;
+        selectedShape = selectedBlock.shapes[shapeIndex];
+
+        UpdateProjectionMesh();
+        Debug.Log(selectedBlock.name + " : " + selectedShape);
     }
 
     void SelectSide(){

@@ -8,8 +8,11 @@ public class MapGrid {
     public GridInfo[,,] cells;
     public float cellSize;
     public Vector3Int gridSize;
-    public Vector3 worldSize;
     public Vector3 worldPos;
+    public Vector3 worldSize;
+
+    public HashSet<Vector3Int> startCells = new HashSet<Vector3Int>();
+    public HashSet<Vector3Int> endCells = new HashSet<Vector3Int>();
 
     public MapGrid(Vector3 worldPos, Vector3Int gridSize, float cellSize){
         this.gridSize = gridSize;
@@ -22,6 +25,8 @@ public class MapGrid {
 
     void ReInitialise(){
         LoopGrid((x,y,z) => {cells[x,y,z] = GridInfo.Empty;});
+        startCells.Clear();
+        endCells.Clear();
     }
 
     //side allows to pick the center of the desired face with a unit vector like Vector3.up
@@ -50,6 +55,16 @@ public class MapGrid {
     }
 
     public void SetCell(Vector3Int point, GridInfo gridInfo){
+        if(startCells.Contains(point))
+            startCells.Remove(point);
+        else if(endCells.Contains(point))
+            endCells.Remove(point);
+
+        if(gridInfo.blockData.content == BlockContent.start)
+            startCells.Add(point);
+        else if(gridInfo.blockData.content == BlockContent.end)
+            endCells.Add(point);
+
         cells[point.x, point.y, point.z] = gridInfo;
     }
 
@@ -124,6 +139,8 @@ public enum BlockContent{
     empty,
     buildable,
     path,
+    start,
+    end
 }
 
 

@@ -102,13 +102,11 @@ public class Pathfinding : MonoBehaviour
         path.Push(PosRotPair(current.worldPos, Quaternion.identity));
         while (current.gridPos != start)
         {
-            Debug.Log(current.gridPos);
             PathNode next = parents[current];
             path.Push(PosRotPair(next.IntersectionPos(current), next.RotationTowards(current, true)));
             path.Push(PosRotPair(next.worldPos, next.RotationTowards(current, false)));
             current = next;    
         }
-        Debug.Log(current.gridPos);
         return path;
     }
 

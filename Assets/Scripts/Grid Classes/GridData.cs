@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Threading.Tasks;
 
 //class used for saving grid data in file
 
@@ -55,16 +56,18 @@ public class GridData
     
     public static void InitBlockData(){
         blockDataDict = new Dictionary<BlockData, int>();
-        for(int i = 0; i < BlockList.blockDataList.Length; i++){
-            blockDataDict.Add(BlockList.blockDataList[i], i);
+        for(int i = 0; i < BlockList.blockList.Length; i++){
+            blockDataDict.Add(BlockList.blockList[i], i);
         }
     }
 
-    public static void SaveGrid(MapGrid grid, string fileName, bool custom){
-        GridData gridData = new GridData(grid);
-        string json = JsonUtility.ToJson(gridData);
-        string path = custom ? customMapsPath : mapdataPath;
-        File.WriteAllText(path + "/" + fileName, json);
+    public static async void SaveGrid(MapGrid grid, string fileName, bool custom){
+        await Task.Run(() =>{
+            GridData gridData = new GridData(grid);
+            string json = JsonUtility.ToJson(gridData);
+            string path = custom ? customMapsPath : mapdataPath;
+            File.WriteAllText(path + "/" + fileName, json);
+        });
     }
 
     public static MapGrid LoadGrid(string fileName, bool custom){
@@ -75,7 +78,7 @@ public class GridData
         MapGrid grid = new MapGrid(gridData.worldPos, gridData.gridSize, gridData.cellSize);
         for (int i = 0; i < gridData.cells.Length; i++)
         {
-            BlockData blockData = BlockList.blockDataList[gridData.blockDatas[i]];
+            BlockData blockData = BlockList.blockList[gridData.blockDatas[i]];
             Quaternion rotation = gridData.rotations[i];
             Shape shape = (Shape)gridData.shapes[i];
             GridInfo cell = new GridInfo(blockData, rotation, shape);

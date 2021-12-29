@@ -13,8 +13,23 @@ MonoBehaviour:
   m_Name: MapBlocks
   m_EditorClassIdentifier: 
   blocks:
-  - name: Cement Block
+  - name: Cement
     content: 1
     shapes: 010000000200000003000000
     material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
-    color: {r: 0.3018868, g: 0.24891421, b: 0.24891421, a: 0}
+    color: {r: 0.3301887, g: 0.3002848, b: 0.3002848, a: 0}
+  - name: Path
+    content: 2
+    shapes: 0100000002000000
+    material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
+    color: {r: 0.7735849, g: 0.50647914, b: 0.50647914, a: 0}
+  - name: Start
+    content: 3
+    shapes: 01000000
+    material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
+    color: {r: 0.37152755, g: 1, b: 0, a: 0}
+  - name: End
+    content: 4
+    shapes: 01000000
+    material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
+    color: {r: 1, g: 0.028188463, b: 0, a: 0}

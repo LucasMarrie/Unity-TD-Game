@@ -7,7 +7,7 @@ public class BlockList : ScriptableObject
 {
     public BlockData[] blocks;
 
-    public static BlockData[] blockDataList;
+    public static BlockData[] blockList;
 }
 
 

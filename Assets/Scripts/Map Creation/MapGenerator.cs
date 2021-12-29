@@ -1,4 +1,5 @@
-using System.Collections;
+using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -9,7 +10,7 @@ using System.IO;
 public class MapGenerator : MonoBehaviour
 {
     //map loading data
-    public static string mapName = "";
+    public static string mapName = "Mabamba.json";
     public static bool customMap = false;
 
     public BlockList blockList;
@@ -28,15 +29,13 @@ public class MapGenerator : MonoBehaviour
     MeshCollider meshCollider;
 
     [Header("Pathfinding test")]
-    public Vector3Int start;
-    public Vector3Int end;
-    public GameObject waypoint;
+    public GameObject pathVisualizer;
 
     void Awake()
     {
         map = this; //set singleton
 
-        BlockList.blockDataList = blockList.blocks;
+        BlockList.blockList = blockList.blocks;
         GridData.InitBlockData();
 
         meshFilter = GetComponent<MeshFilter>();
@@ -75,7 +74,7 @@ public class MapGenerator : MonoBehaviour
     }
 
     public void DeleteBlock(Vector3Int cell){
-        grid.cells[cell.x, cell.y, cell.z] = GridInfo.Empty;
+        grid.SetCell(cell, GridInfo.Empty);
         UpdateMesh();
     }
 
@@ -89,23 +88,31 @@ public class MapGenerator : MonoBehaviour
     }
 
     public void TestPathfinder(){
+        Stopwatch timer = new Stopwatch();
         pathfinder.InnitPathfinder();
-        var path = pathfinder.FindPath(start, end);
-        if(path == null){
-            Debug.Log("no path");
-        }else{
-            while(path.Count > 0){
-                var coord = path.Pop();
-                Instantiate(waypoint, coord.Item1, coord.Item2);
-                Debug.Log(coord.Item1 + "  |  " + coord.Item2);
+        timer.Start();
+        foreach(Vector3Int start in grid.startCells){
+            foreach(Vector3Int end in grid.endCells){
+                Stack<Tuple<Vector3, Quaternion>> path = pathfinder.FindPath(start, end);
+                if(path == null){
+                    UnityEngine.Debug.Log($"no path: {start} to {end}");
+                }else{
+                    VisualizePath(path);
+                }
             }
+        }
+        timer.Stop();
+        UnityEngine.Debug.Log("Elapsed Mills: " + timer.ElapsedMilliseconds + " | Elapsed Ticks: " + timer.ElapsedTicks)    ;
+    }
+
+    public void VisualizePath(Stack<Tuple<Vector3, Quaternion>> path){
+        GameObject visualizer = Instantiate(pathVisualizer);
+        LineRenderer line = visualizer.GetComponent<LineRenderer>();
+        line.positionCount = path.Count;
+        while(path.Count > 0){
+            var coord = path.Pop();
+            line.SetPosition(path.Count, coord.Item1);
         }
     }
 
-    void OnDrawGizmos(){
-        if(grid != null){
-            Gizmos.DrawCube(grid.GridToWorld(start), Vector3.one * cellSize);
-            Gizmos.DrawCube(grid.GridToWorld(end), Vector3.one * cellSize);
-        }
-    }
 }
