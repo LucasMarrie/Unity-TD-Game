@@ -13,6 +13,7 @@ public class Pathfinding : MonoBehaviour
         grid = map.GetGrid();
         PathNode.grid = grid;
         SetNodes();
+        PathNode.BakeGoalHCosts();
     }
 
     void SetNodes(){
@@ -35,6 +36,7 @@ public class Pathfinding : MonoBehaviour
     }
 
     //check Nodes within a radius of pathHeight of a recently updated Node
+    //probably not going to be used
     void UpdateNode(Vector3Int changedNode){
         List<Vector3Int> updatedNodes = new List<Vector3Int>();
         for (int y = changedNode.y - pathHeight; y <= changedNode.y + pathHeight; y++){
@@ -57,9 +59,10 @@ public class Pathfinding : MonoBehaviour
     }
 
     //if no path was found it returns empty Stack
-    public Stack<Tuple<Vector3, Quaternion>> FindPath(Vector3Int start, Vector3Int goal){
+    public Stack<Tuple<Vector3, Quaternion>> FindPath(Vector3Int start, bool findGoalNode = true, Vector3Int goal = default){
         Stack<Tuple<Vector3, Quaternion>> path = null;
-        if(!PathNode.nodes.ContainsKey(start) || !PathNode.nodes.ContainsKey(goal)){
+        if(!PathNode.nodes.ContainsKey(start) || (findGoalNode && PathNode.goals.Count == 0) 
+        || (!findGoalNode && !PathNode.nodes.ContainsKey(goal))){
             return path;
         }
         Dictionary<PathNode, PathNode> parents = new Dictionary<PathNode, PathNode>();
@@ -71,7 +74,7 @@ public class Pathfinding : MonoBehaviour
             PathNode node = openSet.Pop();
             closedSet.Add(node);
 
-            if(node.gridPos == goal){
+            if((!findGoalNode && node.gridPos == goal) || (findGoalNode && PathNode.goals.Contains(node.gridPos))){
                 path = RetraceParents(start, node, parents);
                 break;
             }
@@ -85,7 +88,11 @@ public class Pathfinding : MonoBehaviour
                     }
                 }else{
                     neighbour.SetGCost(node.gCost);
-                    neighbour.SetHCost(goal);
+                    if(findGoalNode){
+                        neighbour.SetGoalHCost();
+                    }else{
+                        neighbour.SetHCost(goal);
+                    }
                     openSet.Add(neighbour);
                     parents.Add(neighbour, node);
                 }

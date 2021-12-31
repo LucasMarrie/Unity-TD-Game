@@ -10,19 +10,21 @@ using System.IO;
 public class MapGenerator : MonoBehaviour
 {
     //map loading data
-    public static string mapName = "Mabamba.json";
+    public static string mapName; //= "Mabamba.json";
     public static bool customMap = false;
+    public string selectedMap;
 
     public BlockList blockList;
     public Vector3Int gridSize = new Vector3Int(30, 10, 30);
     public float cellSize = 1f;
     public Transform floor;
 
+    public Pathfinding pathfinder;
+
     //singleton
     public static MapGenerator map;
 
     MapGrid grid;
-    Pathfinding pathfinder;
     Mesh mesh;
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
@@ -33,6 +35,9 @@ public class MapGenerator : MonoBehaviour
 
     void Awake()
     {
+        if(mapName == null){
+            mapName = selectedMap;
+        }
         map = this; //set singleton
 
         BlockList.blockList = blockList.blocks;
@@ -55,7 +60,6 @@ public class MapGenerator : MonoBehaviour
         }
         UpdateMesh();
 
-        pathfinder = GetComponent<Pathfinding>();
         pathfinder.InnitPathfinder();
     }   
 
@@ -67,14 +71,20 @@ public class MapGenerator : MonoBehaviour
         meshRenderer.materials = materials;
     }
 
-    public void AddBlock(Vector3Int cell, BlockData blockData, Quaternion rotation, Shape shape){
+    public void AddBlocks(List<Vector3Int> cells, BlockData blockData, Quaternion rotation, Shape shape){
         GridInfo gridInfo = new GridInfo(blockData, rotation, shape);
-        grid.SetCell(cell, gridInfo);
+        for (int i = 0; i < cells.Count; i++)
+        {
+            grid.SetCell(cells[i], gridInfo);
+        }
         UpdateMesh();
     }
 
-    public void DeleteBlock(Vector3Int cell){
-        grid.SetCell(cell, GridInfo.Empty);
+    public void DeleteBlocks(List<Vector3Int> cells){
+        for (int i = 0; i < cells.Count; i++)
+        {
+            grid.SetCell(cells[i], GridInfo.Empty);
+        }
         UpdateMesh();
     }
 
@@ -92,17 +102,15 @@ public class MapGenerator : MonoBehaviour
         pathfinder.InnitPathfinder();
         timer.Start();
         foreach(Vector3Int start in grid.startCells){
-            foreach(Vector3Int end in grid.endCells){
-                Stack<Tuple<Vector3, Quaternion>> path = pathfinder.FindPath(start, end);
-                if(path == null){
-                    UnityEngine.Debug.Log($"no path: {start} to {end}");
-                }else{
-                    VisualizePath(path);
-                }
+            Stack<Tuple<Vector3, Quaternion>> path = pathfinder.FindPath(start);
+            if(path == null){
+                UnityEngine.Debug.Log($"no path: {start} to any Goal");
+            }else{
+                VisualizePath(path);
             }
         }
         timer.Stop();
-        UnityEngine.Debug.Log("Elapsed Mills: " + timer.ElapsedMilliseconds + " | Elapsed Ticks: " + timer.ElapsedTicks)    ;
+        UnityEngine.Debug.Log("Elapsed Mills: " + timer.ElapsedMilliseconds);
     }
 
     public void VisualizePath(Stack<Tuple<Vector3, Quaternion>> path){

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3d8e0bf548d4040a085ed6f80dd595, type: 3}
+  m_Name: 3 x 1 unit
+  m_EditorClassIdentifier: 
+  cooldown: 3
+  battalions:
+  - amount: 3
+    allStarts: 1
+    spawnDelay: 1
+    units:
+    - unit: {fileID: 405661610677417845, guid: e4a3f91288658b044a20d01ac85935d1, type: 3}
+      amount: 1

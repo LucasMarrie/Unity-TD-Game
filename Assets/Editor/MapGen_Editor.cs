@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using System.Diagnostics;
 
 [CustomEditor(typeof(MapGenerator))]
 public class MapGen_Editor : Editor
@@ -9,8 +8,10 @@ public class MapGen_Editor : Editor
         base.OnInspectorGUI();
         MapGenerator mapgen = (MapGenerator)target;
         Transform floor = mapgen.floor;
+        if(floor != null){
         floor.position = mapgen.gameObject.transform.position + Vector3.down * (mapgen.gridSize.y + 1)/2 * mapgen.cellSize;
         floor.localScale = new Vector3(mapgen.gridSize.x, 1, mapgen.gridSize.z) * mapgen.cellSize;
+        }
 
         GUILayout.BeginHorizontal();
 

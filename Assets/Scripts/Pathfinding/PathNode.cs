@@ -17,15 +17,20 @@ public class PathNode : IComparable<PathNode>
         BlockContent.empty,
     };
 
+    public static HashSet<Vector3Int> goals;
+
+    static float slopeCostMutliplier = 1.4f;
+
     public Vector3Int gridPos;
     public Vector3 worldPos;
     Vector3Int normal;
     bool flat;
     Dictionary<Vector3Int, int> adjacents; //the integer represents change in elevation
     public HashSet<PathNode> neighbours;
-    int moveCost = 10;
-    public int gCost = 0;
-    public int hCost = 0;
+    float moveCost = 10;
+    public float gCost = 0;
+    public float hCost = 0;
+    public float goalHCost = 0;
 
     public PathNode(Vector3Int _gridPos, Vector3Int _normal){
         gridPos = _gridPos;
@@ -35,6 +40,7 @@ public class PathNode : IComparable<PathNode>
             flat = true;
         }else{
             flat = false;
+            moveCost *= slopeCostMutliplier;
         }
         SetAdjacents();
         SetWorldPos();
@@ -163,8 +169,12 @@ public class PathNode : IComparable<PathNode>
         hCost = Mathf.Abs(diff.x) + Mathf.Abs(diff.y) + Mathf.Abs(diff.z);
     }
 
-    public bool UpdateGCost(int prevG){
-        int newGCost = prevG + moveCost;
+    public void SetGoalHCost(){
+        hCost = goalHCost;
+    }
+
+    public bool UpdateGCost(float prevG){
+        float newGCost = prevG + moveCost;
         if(newGCost < gCost){
             gCost = newGCost;
             return true;
@@ -172,12 +182,17 @@ public class PathNode : IComparable<PathNode>
         return false;
     }
 
-    public void SetGCost(int prevG){
+    public void SetGCost(float prevG){
         gCost = prevG + moveCost;
     }
 
-    public int FCost(){
+    public float FCost(){
         return gCost + hCost;
+    }
+
+
+    public void AddMoveCost(float cost){
+        moveCost += cost; 
     }
 
     public void ResetCost(){
@@ -191,6 +206,32 @@ public class PathNode : IComparable<PathNode>
         }
     }
 
+    public static void BakeGoalHCosts(){
+        SetEndCells();
+        foreach(PathNode node in nodes.Values){
+            if(goals.Contains(node.gridPos)) continue; //optimization
+            int bestCost = int.MaxValue;
+            foreach(Vector3Int goal in goals){
+                Vector3Int diff = goal - node.gridPos;
+                int tempCost = Mathf.Abs(diff.x) + Mathf.Abs(diff.y) + Mathf.Abs(diff.z);
+                if(tempCost < bestCost){
+                    bestCost = tempCost;
+                }
+            }
+            node.goalHCost = bestCost;
+        }
+    }
+
+    static void SetEndCells(){
+        HashSet<Vector3Int> endCells = new HashSet<Vector3Int>(); 
+        foreach(Vector3Int endCell in grid.endCells){
+            if(nodes.ContainsKey(endCell)){
+                endCells.Add(endCell);
+            }
+        }
+        goals = endCells;
+    }
+
     public int CompareTo(PathNode node){
         int compare = FCost().CompareTo(node.FCost());
         if(compare == 0){
@@ -198,6 +239,7 @@ public class PathNode : IComparable<PathNode>
         }
         return -compare;
     }
+
 
     
 }

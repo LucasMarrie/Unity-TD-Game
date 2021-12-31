@@ -17,19 +17,19 @@ MonoBehaviour:
     content: 1
     shapes: 010000000200000003000000
     material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
-    color: {r: 0.3301887, g: 0.3002848, b: 0.3002848, a: 0}
+    color: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 0}
   - name: Path
     content: 2
     shapes: 0100000002000000
     material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
-    color: {r: 0.7735849, g: 0.50647914, b: 0.50647914, a: 0}
+    color: {r: 0.13207549, g: 0.11886794, b: 0.11886794, a: 0}
   - name: Start
     content: 3
     shapes: 01000000
-    material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
-    color: {r: 0.37152755, g: 1, b: 0, a: 0}
+    material: {fileID: 2100000, guid: 7fea9a305ef51fc4dba9759c52ea9f03, type: 2}
+    color: {r: 0.37668008, g: 0.7169812, b: 0.17180489, a: 0}
   - name: End
     content: 4
     shapes: 01000000
-    material: {fileID: 2100000, guid: 5f7f599143528894fb4ff34217ccc360, type: 2}
-    color: {r: 1, g: 0.028188463, b: 0, a: 0}
+    material: {fileID: 2100000, guid: 568864a718e52fb41adc4f67cac23076, type: 2}
+    color: {r: 0.764151, g: 0.17101376, b: 0.15427198, a: 0}

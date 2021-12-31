@@ -42,13 +42,14 @@ public static class MeshGenerator
     }
 
 
-    public static Mesh CreateMesh(GridInfo objInfo, float size){
+    public static Mesh CreateMesh(GridInfo objInfo, float size, bool hasColor){
         foreach(var dir in ShapeData.shapeDict[objInfo.shape].faces.Keys){
             AddFace(Vector3.zero, size, dir, objInfo);
         }
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles[0].ToArray(); 
+        mesh.colors = colors.ToArray();
         mesh.RecalculateNormals();
 
         ResetVariables();

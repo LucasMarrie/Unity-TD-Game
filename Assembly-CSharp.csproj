@@ -36,17 +36,21 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Units\WaveManager.cs" />
      <Compile Include="Assets\Scripts\Pathfinding\PathNode.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\BlockList.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\ShapeData.cs" />
+     <Compile Include="Assets\Scripts\Units\Unit.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\GridData.cs" />
+     <Compile Include="Assets\Scripts\Units\WaveList.cs" />
      <Compile Include="Assets\Scripts\Pathfinding\Pathfinding.cs" />
-     <Compile Include="Assets\Scripts\Map Creation\MeshGenerator.cs" />
-     <Compile Include="Assets\Scripts\Map Creation\MapEditor.cs" />
+     <Compile Include="Assets\Scripts\Map Editing\MeshGenerator.cs" />
+     <Compile Include="Assets\Scripts\Map Editing\MapEditor.cs" />
+     <Compile Include="Assets\Scripts\Pathfinding\Heap.cs" />
+     <Compile Include="Assets\Scripts\Units\Wave.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\MapGrid.cs" />
-     <Compile Include="Assets\Scripts\Map Creation\MapGenerator.cs" />
-     <Compile Include="Assets\Scripts\Pathfinding\Heap.cs" />
+     <Compile Include="Assets\Scripts\Map Editing\MapGenerator.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity 2020.3.22f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
