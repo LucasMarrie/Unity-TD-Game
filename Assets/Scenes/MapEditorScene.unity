@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64853add67d684b4791f0ad3f788488b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedMap: 
+  selectedMap: Mabamba.json
   blockList: {fileID: 11400000, guid: 0287e9fc3450a5d499ae773ac94af4ce, type: 2}
   gridSize: {x: 15, y: 10, z: 15}
   cellSize: 1
@@ -774,6 +774,7 @@ MonoBehaviour:
   showcaseObj: {fileID: 2085576078}
   showcaseRotationSpeed: 90
   timeBetweenAction: 0.15
+  maxtoolSize: 15
 --- !u!4 &1296980660
 Transform:
   m_ObjectHideFlags: 0
@@ -822,6 +823,7 @@ MonoBehaviour:
   speed: 10
   mouseSensitivity: 5
   cam: {fileID: 963194228}
+  useMouse: 1
 --- !u!1 &1610620717
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,7 +21,7 @@ public class TurretEditor : MonoBehaviour
     bool showHighlight = false;
 
     //turret editing
-    int rotationIndex = 0; //out of 4
+    int rotation = 0; 
 
     void Start()
     {
@@ -35,8 +35,15 @@ public class TurretEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Inputs();
         SelectSide();
         highlightObj.SetActive(showHighlight);
+    }
+
+    void Inputs(){
+        if(Input.GetKeyDown(KeyCode.R)){
+            rotation = ++rotation % 4;
+        }
     }
 
     void CycleTurret(int cycle){
@@ -69,7 +76,6 @@ public class TurretEditor : MonoBehaviour
             }else{
                 PositionHighlight(placementCell, false);
             }
-
         }else{
             return false;
         }
@@ -79,17 +85,26 @@ public class TurretEditor : MonoBehaviour
     bool SpaceAvailable(Vector3Int cell, out List<Vector3Int> occupiedSpaces){
         occupiedSpaces = new List<Vector3Int>();
         Vector3Int size = RotatedTurretSize();
+        int xSign = GetSign(size.x);
+        int zSign = GetSign(size.z);
         for (int y = 0; y <= size.y; y++){
-            for (int x = 0; x < size.x; x++){
-                for (int z = 0; z < size.z; z++){
-                    Vector3Int tempCell = cell + new Vector3Int(x,y,z);
+            for (int x = 0; x < size.x * (xSign); x++){
+                for (int z = 0; z < size.z * (zSign); z++){
+                    Vector3Int tempCellPos = cell + new Vector3Int(x * xSign,y,z * zSign);
+                    GridInfo tempCell = grid.GetCell(tempCellPos);
                     if(y == 0){
-                        if(!grid.InBounds(tempCell) || grid.GetCell(tempCell).blockData.content != BlockContent.buildable){
+                        if(grid.InBounds(tempCellPos) && tempCell.blockData.content == BlockContent.buildable){
+                            if(ShapeData.shapeDict[tempCell.shape].traversableNormals != null){
+                                foreach(Vector3Int normal in ShapeData.shapeDict[tempCell.shape].traversableNormals){
+                                    if(Vector3Int.RoundToInt(tempCell.rotation * normal).y >= 0) return false;
+                                }
+                            }
+                        }else{
                             return false;
                         }
                     }else{
-                        if(grid.InBounds(tempCell) && grid.GetCell(tempCell) == GridInfo.empty){
-                            occupiedSpaces.Add(tempCell);
+                        if(grid.InBounds(tempCellPos) && tempCell == GridInfo.empty){
+                            occupiedSpaces.Add(tempCellPos);
                         }else{
                             return false;
                         }
@@ -100,9 +115,14 @@ public class TurretEditor : MonoBehaviour
         return true;
     }
 
+    int GetSign(int x){
+        return x < 0 ? -1 : 1;
+    }
+
     void PositionHighlight(Vector3Int cell, bool valid){
         highlightObj.transform.position = GetTurretCenter(cell);
-        highlightObj.transform.localScale = new Vector3(selectedTurret.size.x, 0.001f, selectedTurret.size.z) * grid.cellSize;
+        Vector3Int size = RotatedTurretSize();
+        highlightObj.transform.localScale = new Vector3(size.x, 0.001f, size.z) * grid.cellSize;
         if(prevHighlight != valid){
             if(valid){
                 highlightObj.GetComponent<MeshRenderer>().material = validMat;
@@ -115,14 +135,17 @@ public class TurretEditor : MonoBehaviour
 
     Vector3 GetTurretCenter(Vector3Int cell){
         Vector3Int size = RotatedTurretSize();
-        Vector3 offsetX = Vector3.right * size.x / 2;
-        Vector3 offsetZ = Vector3.forward * size.z / 2;
-        Vector3 corner = grid.GridToWorld(cell, side : Vector3.up) - new Vector3(1, 0, 1) * grid.cellSize / 2;
+        Vector3 offsetX = Vector3.right * size.x / 2 * grid.cellSize;
+        Vector3 offsetZ = Vector3.forward * size.z / 2 * grid.cellSize;
+        int xSign = GetSign(size.x);
+        int zSign = GetSign(size.z);
+        Vector3 corner = grid.GridToWorld(cell, side : Vector3.up) - new Vector3(xSign, 0, zSign) * grid.cellSize / 2;
         return corner + offsetX + offsetZ;
     }
 
     Vector3Int RotatedTurretSize(){
-        return Vector3Int.RoundToInt(Quaternion.Euler(Vector3.up * 180 * rotationIndex) * selectedTurret.size);
+        Vector3Int size = Vector3Int.RoundToInt(Quaternion.Euler(Vector3.up * rotation * 90) * selectedTurret.size);
+        return size;
     }
 
     void AddTurret(Vector3Int cell, List<Vector3Int> occupiedSpaces){
@@ -131,7 +154,7 @@ public class TurretEditor : MonoBehaviour
             grid.SetCell(occupiedCell, GridInfo.occupied);
         }
         Vector3 center = GetTurretCenter(cell);
-        Instantiate(selectedTurret.turret, center, Quaternion.Euler(Vector3.up * 180 * rotationIndex));
+        Instantiate(selectedTurret.turret, center, Quaternion.Euler(Vector3.up * rotation * 90));
     }
 
 }

@@ -5,7 +5,7 @@ public class ShapeData
 {
     public Vector3[] vertices;
     public Dictionary<Vector3,int[]> faces;
-    public Vector3Int traversableNormal;
+    public List<Vector3Int> traversableNormals;
 
     public static ShapeData cube = new ShapeData(
         new Vector3[]{
@@ -46,7 +46,7 @@ public class ShapeData
             { Vector3.right, new int[]{1, 5, 3} },
             { MergeDir(new Vector3[]{Vector3.up, Vector3.forward}), new int[]{0, 3, 2, 0, 1, 3} }
         },
-        Vector3Int.forward + Vector3Int.up
+        new List<Vector3Int>{Vector3Int.forward + Vector3Int.up}
     );
 
     //2 vertex face is forward  (with 1 vertex top left)
@@ -64,7 +64,8 @@ public class ShapeData
             { Vector3.left, new int[]{3, 0, 2} },
             { MergeDir(new Vector3[]{Vector3.up, Vector3.forward}), new int[]{0, 1, 2} },
             { MergeDir(new Vector3[]{Vector3.up, Vector3.right}), new int[]{1, 4, 2} },
-        }
+        },
+        new List<Vector3Int>{Vector3Int.up + Vector3Int.forward, Vector3Int.up + Vector3Int.right}
     );
 
     public static Dictionary<Shape, ShapeData> shapeDict = new Dictionary<Shape, ShapeData>{
@@ -73,10 +74,10 @@ public class ShapeData
         {Shape.pyramid, ShapeData.pyramid},
     };
 
-    public ShapeData(Vector3[] _vertices, Dictionary<Vector3,int[]> _faces, Vector3Int _traversableNormal = default){
+    public ShapeData(Vector3[] _vertices, Dictionary<Vector3,int[]> _faces, List<Vector3Int> _traversableNormals = null){
         vertices = _vertices;
         faces = _faces;
-        traversableNormal = _traversableNormal;
+        traversableNormals = _traversableNormals;
     }
 
     public static Vector3 MergeDir(Vector3[] dirs){

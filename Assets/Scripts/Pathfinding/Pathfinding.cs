@@ -29,8 +29,9 @@ public class Pathfinding : MonoBehaviour
         Vector3Int pos = new Vector3Int(x,y,z);
             GridInfo cell = grid.GetCell(pos);
             Vector3Int normal = Vector3Int.zero;
-            if(ShapeData.shapeDict.ContainsKey(cell.shape)){
-                normal =  Vector3Int.RoundToInt(cell.rotation * ShapeData.shapeDict[cell.shape].traversableNormal);
+            if(ShapeData.shapeDict.ContainsKey(cell.shape) && ShapeData.shapeDict[cell.shape].traversableNormals != null){
+
+                normal = Vector3Int.RoundToInt(cell.rotation * ShapeData.shapeDict[cell.shape].traversableNormals[0]);
             }
             PathNode.TryAddNode(pos, normal, pathHeight);
     }
