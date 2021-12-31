@@ -107,12 +107,12 @@ GameObject:
   - component: {fileID: 8201701479379944545}
   - component: {fileID: 3972894636914849167}
   m_Layer: 0
-  m_Name: Highligh Obj
+  m_Name: Map Highligh Obj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2176685074521804522
 Transform:
   m_ObjectHideFlags: 0

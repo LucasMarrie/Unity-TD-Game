@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 10f;
     public float mouseSensitivity = 5f;
     public Transform cam;
+    public bool useMouse = true;
     CharacterController controller;
     float verticalAngle = 0;
     float x;
@@ -37,8 +38,12 @@ public class PlayerMovement : MonoBehaviour
             y = 0;
         }
 
-        if(Input.GetButton("Fire3")){
-            Cursor.lockState = CursorLockMode.Confined;
+        if(Input.GetKeyDown(KeyCode.V)){
+            useMouse = !useMouse;
+        }
+
+        if(!useMouse || (useMouse && Input.GetButton("Fire3"))){
+            Cursor.lockState = useMouse ? CursorLockMode.Confined : CursorLockMode.Locked;
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivity);
             verticalAngle -= Input.GetAxis("Mouse Y") * mouseSensitivity;
             verticalAngle = Mathf.Clamp(verticalAngle, -90f, 90f);

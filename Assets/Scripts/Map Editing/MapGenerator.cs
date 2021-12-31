@@ -83,7 +83,7 @@ public class MapGenerator : MonoBehaviour
     public void DeleteBlocks(List<Vector3Int> cells){
         for (int i = 0; i < cells.Count; i++)
         {
-            grid.SetCell(cells[i], GridInfo.Empty);
+            grid.SetCell(cells[i], GridInfo.empty);
         }
         UpdateMesh();
     }

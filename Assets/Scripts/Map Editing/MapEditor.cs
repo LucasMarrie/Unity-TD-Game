@@ -12,7 +12,7 @@ public class MapEditor : MonoBehaviour
     List<GameObject> highlightObjects = new List<GameObject>();
     public Material invalidMat;
     public Material validMat;
-    int prevHighlight = -1;
+    bool? prevValidity = null;
     bool showHighlight = false;
 
     [Header("Projection Objects")]
@@ -159,7 +159,7 @@ public class MapEditor : MonoBehaviour
                 if(topCell != Vector3Int.one * -1 && grid.GetCell(topCell).blockData.content == BlockContent.empty){
                     List<Vector3Int> selectedCells = GetSelection(topCell, normal);
                     if(hit.distance > minPlaceDistance){
-                        PositionHighlight(selectedCells, -normal, HighlighType.valid, EditType.Add);
+                        PositionHighlight(selectedCells, -normal, true, EditType.Add);
                         if(Input.GetButton("Fire1") && Time.time >= nextActionTime){
                             map.AddBlocks(selectedCells, selectedBlock, rotation, selectedShape);
                             nextActionTime = Time.time + timeBetweenAction;
@@ -167,13 +167,13 @@ public class MapEditor : MonoBehaviour
                         ProjectObject(selectedCells, rotation);
                     }
                 }else if(bottomCell != Vector3.one * -1){
-                    PositionHighlight(new List<Vector3Int>{bottomCell}, normal, HighlighType.invalid, EditType.Add);
+                    PositionHighlight(new List<Vector3Int>{bottomCell}, normal, true, EditType.Add);
                 }
             }
             else if(selectedEdit == EditType.Delete){
                 if(bottomCell != Vector3.one * -1){
                     List<Vector3Int> selectedCells = GetSelection(bottomCell, normal);
-                    PositionHighlight(selectedCells, normal, HighlighType.invalid, EditType.Delete);
+                    PositionHighlight(selectedCells, normal, false, EditType.Delete);
                     if(Input.GetButton("Fire1") && Time.time >= nextActionTime){
                         map.DeleteBlocks(selectedCells);
                         nextActionTime = Time.time + timeBetweenAction;
@@ -203,14 +203,15 @@ public class MapEditor : MonoBehaviour
         if(surface.z == 1){
             dirs[dirIdx++] = Vector3Int.forward;
         }
+        
         for (int x = -(toolSize - 1)/2; x <= (toolSize - 1)/2; x++)
         {
             for (int z = -(toolSize - 1)/2; z <= (toolSize - 1)/2; z++)
             {
                 Vector3Int tempCell = cell + dirs[0] * x + dirs[1] * z;
                 if(grid.InBounds(tempCell)){
-                    if((selectedEdit == EditType.Add && grid.GetCell(tempCell) == GridInfo.Empty)
-                    || (selectedEdit == EditType.Delete && grid.GetCell(tempCell) != GridInfo.Empty)){
+                    if((selectedEdit == EditType.Add && grid.GetCell(tempCell) == GridInfo.empty)
+                    || (selectedEdit == EditType.Delete && grid.GetCell(tempCell) != GridInfo.empty)){
                         selection.Add(tempCell);
                     }
                 }
@@ -309,10 +310,10 @@ public class MapEditor : MonoBehaviour
         showcaseObj.transform.Rotate(Vector3.up * showcaseRotationSpeed * Time.deltaTime);
     }
 
-    void PositionHighlight(List<Vector3Int> cells, Vector3 normal, HighlighType hltType, EditType editType){
-        if(prevHighlight != (int)hltType){
-            SwitchHighlightMat(hltType);
-            prevHighlight = (int)hltType;
+    void PositionHighlight(List<Vector3Int> cells, Vector3 normal, bool valid, EditType editType){
+        if(prevValidity != valid){
+            SwitchHighlightMat(valid);
+            prevValidity = valid;
         }
         for (int i = 0; i < cells.Count; i++)
         {
@@ -337,9 +338,9 @@ public class MapEditor : MonoBehaviour
         }
     }
 
-    void SwitchHighlightMat(HighlighType hltType){
+    void SwitchHighlightMat(bool valid){
         foreach(GameObject obj in highlightObjects){
-            if(hltType == HighlighType.valid){
+            if(valid){
                 obj.GetComponent<MeshRenderer>().material = validMat;
             }else{
                 obj.GetComponent<MeshRenderer>().material = invalidMat;
@@ -353,11 +354,6 @@ public class MapEditor : MonoBehaviour
                 obj.SetActive(false);
             }
         }
-    }
-
-    enum HighlighType{
-        valid,
-        invalid,
     }
 
     enum EditType

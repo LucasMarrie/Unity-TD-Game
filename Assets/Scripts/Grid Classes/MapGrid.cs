@@ -24,7 +24,7 @@ public class MapGrid {
     }
 
     void ReInitialise(){
-        LoopGrid((x,y,z) => {cells[x,y,z] = GridInfo.Empty;});
+        LoopGrid((x,y,z) => {cells[x,y,z] = GridInfo.empty;});
         startCells.Clear();
         endCells.Clear();
     }
@@ -111,8 +111,14 @@ public class GridInfo
     public Quaternion rotation; 
     public Shape shape;
 
-    public static GridInfo Empty = new GridInfo(
+    public static GridInfo empty = new GridInfo(
         new BlockData{name = "empty", content = BlockContent.empty},
+        Quaternion.identity,
+        Shape.none
+    );
+
+    public static GridInfo occupied = new GridInfo(
+        new BlockData{name = "occupied", content = BlockContent.occupied},
         Quaternion.identity,
         Shape.none
     );
@@ -137,10 +143,11 @@ public struct BlockData {
 
 public enum BlockContent{
     empty,
+    occupied, // for usage during gameplay phase, nor a block
     buildable,
     path,
     start,
-    end
+    end,
 }
 
 

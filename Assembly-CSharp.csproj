@@ -51,6 +51,9 @@
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\MapGrid.cs" />
      <Compile Include="Assets\Scripts\Map Editing\MapGenerator.cs" />
+     <Compile Include="Assets\Scripts\Turret Edit\TurretEditor.cs" />
+     <Compile Include="Assets\Scripts\Turret Edit\TurretData.cs" />
+     <Compile Include="Assets\Scripts\Turret Edit\TurretList.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity 2020.3.22f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

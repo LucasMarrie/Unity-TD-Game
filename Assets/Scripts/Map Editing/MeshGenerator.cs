@@ -41,7 +41,6 @@ public static class MeshGenerator
         return mesh;
     }
 
-
     public static Mesh CreateMesh(GridInfo objInfo, float size, bool hasColor){
         foreach(var dir in ShapeData.shapeDict[objInfo.shape].faces.Keys){
             AddFace(Vector3.zero, size, dir, objInfo);
