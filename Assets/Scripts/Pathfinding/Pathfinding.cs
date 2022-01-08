@@ -60,8 +60,8 @@ public class Pathfinding : MonoBehaviour
     }
 
     //if no path was found it returns empty Stack
-    public Stack<Tuple<Vector3, Quaternion>> FindPath(Vector3Int start, bool findGoalNode = true, Vector3Int goal = default){
-        Stack<Tuple<Vector3, Quaternion>> path = null;
+    public Stack<MovementNode> FindPath(Vector3Int start, bool findGoalNode = true, Vector3Int goal = default){
+        Stack<MovementNode> path = null;
         if(!PathNode.nodes.ContainsKey(start) || (findGoalNode && PathNode.goals.Count == 0) 
         || (!findGoalNode && !PathNode.nodes.ContainsKey(goal))){
             return path;
@@ -104,15 +104,15 @@ public class Pathfinding : MonoBehaviour
     }
 
     //returns in world movement waypoints and rotation to face once it reaches the node including the points in between each nodes
-    Stack<Tuple<Vector3, Quaternion>> RetraceParents(Vector3Int start, PathNode endNode, Dictionary<PathNode, PathNode> parents){
-        Stack<Tuple<Vector3, Quaternion>> path = new Stack<Tuple<Vector3, Quaternion>>();
+    Stack<MovementNode> RetraceParents(Vector3Int start, PathNode endNode, Dictionary<PathNode, PathNode> parents){
+        Stack<MovementNode> path = new Stack<MovementNode>();
         PathNode current = endNode;
-        path.Push(PosRotPair(current.worldPos, Quaternion.identity));
+        path.Push(new MovementNode(current.worldPos, Quaternion.identity, current.gridPos));
         while (current.gridPos != start)
         {
             PathNode next = parents[current];
-            path.Push(PosRotPair(next.IntersectionPos(current), next.RotationTowards(current, true)));
-            path.Push(PosRotPair(next.worldPos, next.RotationTowards(current, false)));
+            path.Push(new MovementNode(next.IntersectionPos(current), next.RotationTowards(current, true), null));
+            path.Push(new MovementNode(next.worldPos, next.RotationTowards(current, false), next.gridPos));
             current = next;    
         }
         return path;
@@ -122,5 +122,16 @@ public class Pathfinding : MonoBehaviour
         return new Tuple<Vector3, Quaternion>(pos, rot);
     }
 
+}
 
+public struct MovementNode{
+    public Vector3 position;
+    public Quaternion rotation;
+    public Vector3Int? gridPos;
+
+    public MovementNode(Vector3 position, Quaternion rotation, Vector3Int? gridPos){
+        this.position = position;
+        this.rotation = rotation;
+        this.gridPos = gridPos;
+    }
 }

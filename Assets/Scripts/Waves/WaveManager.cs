@@ -17,6 +17,7 @@ public class WaveManager : MonoBehaviour
         map = MapGenerator.map;
         grid = map.GetGrid();
         SetStarts();
+        NextWave();
     }
 
     void SetStarts(){
@@ -54,7 +55,7 @@ public class WaveManager : MonoBehaviour
     }
 
     void SpawnUnit(GameObject unit, Vector3Int startPosition){
-        Instantiate(unit, grid.GridToWorld(startPosition), Quaternion.identity);
+        Instantiate(unit, grid.GridToWorld(startPosition, side : Vector3.up), Quaternion.identity);
     }
 
     public void NextWave(){

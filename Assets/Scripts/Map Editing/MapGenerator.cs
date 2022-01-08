@@ -102,7 +102,7 @@ public class MapGenerator : MonoBehaviour
         pathfinder.InnitPathfinder();
         timer.Start();
         foreach(Vector3Int start in grid.startCells){
-            Stack<Tuple<Vector3, Quaternion>> path = pathfinder.FindPath(start);
+            Stack<MovementNode> path = pathfinder.FindPath(start);
             if(path == null){
                 UnityEngine.Debug.Log($"no path: {start} to any Goal");
             }else{
@@ -113,13 +113,13 @@ public class MapGenerator : MonoBehaviour
         UnityEngine.Debug.Log("Elapsed Mills: " + timer.ElapsedMilliseconds);
     }
 
-    public void VisualizePath(Stack<Tuple<Vector3, Quaternion>> path){
+    public void VisualizePath(Stack<MovementNode> path){
         GameObject visualizer = Instantiate(pathVisualizer);
         LineRenderer line = visualizer.GetComponent<LineRenderer>();
         line.positionCount = path.Count;
         while(path.Count > 0){
             var coord = path.Pop();
-            line.SetPosition(path.Count, coord.Item1);
+            line.SetPosition(path.Count, coord.position);
         }
     }
 

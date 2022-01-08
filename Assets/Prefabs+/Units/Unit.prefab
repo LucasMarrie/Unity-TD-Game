@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2347894065259953872}
   - component: {fileID: 9089550597174151602}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,6 +49,7 @@ MonoBehaviour:
   horizRotSpeed: 180
   preTurnDistance: 0.3
   movementWeight: 10
+  targettingCenter: {fileID: 4198659020075216897}
 --- !u!1 &1996821148975392857
 GameObject:
   m_ObjectHideFlags: 0
@@ -61,7 +62,7 @@ GameObject:
   - component: {fileID: 728521527767036866}
   - component: {fileID: 2778038631102299394}
   - component: {fileID: 8650881507127537477}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,8 +158,7 @@ GameObject:
   - component: {fileID: 8852081383345282567}
   - component: {fileID: 6268933994334126411}
   - component: {fileID: 5838237254935297304}
-  - component: {fileID: 8455562424917345408}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,16 +228,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8455562424917345408
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3461567885984996488}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

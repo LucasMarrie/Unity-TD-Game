@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9120c70fe57836a49b56043af6c69796, type: 3}
   m_Name: Cube 'Turret'
   m_EditorClassIdentifier: 
-  name: Testing Cube
+  Name: Cube Turret
   buildCost: 0
-  size: {x: 2, y: 1, z: 2}
+  size: {x: 1, y: 1, z: 1}
   turret: {fileID: 4030334351076550460, guid: e50e88c56e68fa44ebbbc95994f2db8d, type: 3}

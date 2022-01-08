@@ -249,10 +249,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64853add67d684b4791f0ad3f788488b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedMap: Mabamba.json
+  selectedMap: 
   blockList: {fileID: 11400000, guid: 0287e9fc3450a5d499ae773ac94af4ce, type: 2}
   gridSize: {x: 15, y: 10, z: 15}
-  cellSize: 1
+  cellSize: 1.5
   floor: {fileID: 868793943}
   pathfinder: {fileID: 793912444}
   pathVisualizer: {fileID: 5674738993142152113, guid: 8843e319501d994449455d2aa5fa86e3, type: 3}
@@ -374,8 +374,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868793942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5.5, z: 0}
-  m_LocalScale: {x: 15, y: 1, z: 15}
+  m_LocalPosition: {x: 0, y: -8.25, z: 0}
+  m_LocalScale: {x: 22.5, y: 1.5, z: 22.5}
   m_Children: []
   m_Father: {fileID: 793912440}
   m_RootOrder: 0
@@ -412,7 +412,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 740793af5581ce04b820c5e0f78ddb9d, type: 2}
+  - {fileID: 2100000, guid: ed64ec0fa99f6dc4398d2fd6905957cc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

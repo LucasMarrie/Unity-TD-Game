@@ -36,24 +36,39 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Units\WaveManager.cs" />
+     <Compile Include="Assets\Scripts\Waves\WaveManager.cs" />
      <Compile Include="Assets\Scripts\Pathfinding\PathNode.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\BlockList.cs" />
+     <Compile Include="Assets\Scripts\Units\Unit Interfaces.cs" />
+     <Compile Include="Assets\Scripts\Billboard.cs" />
+     <Compile Include="Assets\Scripts\Turret Edit\TurretList.cs" />
+     <Compile Include="Assets\Scripts\Turret Edit\TurretData.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\ShapeData.cs" />
-     <Compile Include="Assets\Scripts\Units\Unit.cs" />
+     <Compile Include="Assets\Scripts\Bullets\Bullet Interfaces.cs" />
+     <Compile Include="Assets\Scripts\Turrets\StandardShooting.cs" />
+     <Compile Include="Assets\Scripts\Units\UnitMovement.cs" />
+     <Compile Include="Assets\Scripts\Turret Edit\TurretPlacer.cs" />
+     <Compile Include="Assets\Scripts\Turrets\TurretMain.cs" />
+     <Compile Include="Assets\Scripts\Turrets\StandardUpgrading.cs" />
+     <Compile Include="Assets\Scripts\Turrets\TurretRotating.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\GridData.cs" />
-     <Compile Include="Assets\Scripts\Units\WaveList.cs" />
+     <Compile Include="Assets\Scripts\Turret Edit\TurretEditor.cs" />
+     <Compile Include="Assets\Scripts\Waves\WaveList.cs" />
      <Compile Include="Assets\Scripts\Pathfinding\Pathfinding.cs" />
      <Compile Include="Assets\Scripts\Map Editing\MeshGenerator.cs" />
      <Compile Include="Assets\Scripts\Map Editing\MapEditor.cs" />
+     <Compile Include="Assets\Scripts\Turrets\HitscanTargetting.cs" />
+     <Compile Include="Assets\Scripts\Bullets\Bullet.cs" />
      <Compile Include="Assets\Scripts\Pathfinding\Heap.cs" />
-     <Compile Include="Assets\Scripts\Units\Wave.cs" />
+     <Compile Include="Assets\Scripts\Waves\Wave.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Grid Classes\MapGrid.cs" />
+     <Compile Include="Assets\Scripts\Turrets\Turret Interfaces.cs" />
      <Compile Include="Assets\Scripts\Map Editing\MapGenerator.cs" />
-     <Compile Include="Assets\Scripts\Turret Edit\TurretEditor.cs" />
-     <Compile Include="Assets\Scripts\Turret Edit\TurretData.cs" />
-     <Compile Include="Assets\Scripts\Turret Edit\TurretList.cs" />
+     <Compile Include="Assets\QuickOutline\Scripts\Outline.cs" />
+     <None Include="Assets\QuickOutline\Resources\Shaders\OutlineMask.shader" />
+     <None Include="Assets\QuickOutline\Readme.txt" />
+     <None Include="Assets\QuickOutline\Resources\Shaders\OutlineFill.shader" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity 2020.3.22f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
