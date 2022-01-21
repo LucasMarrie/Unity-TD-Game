@@ -12,5 +12,9 @@ public class WaveManager_Editor : Editor
         if(GUILayout.Button("Send Next Wave")){
              waveManager.NextWave();
         }
+
+        if(GUILayout.Button("Reset Waves")){
+             waveManager.ResetWaves();
+        }
     }
 }

@@ -66,7 +66,7 @@ public class Pathfinding : MonoBehaviour
         || (!findGoalNode && !PathNode.nodes.ContainsKey(goal))){
             return path;
         }
-        Dictionary<PathNode, PathNode> parents = new Dictionary<PathNode, PathNode>();
+        Dictionary<PathNode, PathNode> parents = new Dictionary<PathNode, PathNode>(PathNode.nodes.Count);
         Heap<PathNode> openSet = new Heap<PathNode>(PathNode.nodes.Count);
         openSet.Add(PathNode.nodes[start]);
         HashSet<PathNode> closedSet = new HashSet<PathNode>();

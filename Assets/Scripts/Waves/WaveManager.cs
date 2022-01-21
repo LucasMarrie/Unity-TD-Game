@@ -66,5 +66,9 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    public void ResetWaves(){
+        wave = 0;
+    }
+
 
 }

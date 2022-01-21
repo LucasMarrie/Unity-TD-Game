@@ -2,34 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputs))]
 public class MapEditor : MonoBehaviour
 {
     MapGenerator map;
-    Camera cam;
-    public LayerMask mapMask;
+    PlayerInputs playerInputs;
+    [SerializeField] LayerMask mapMask;
     [Header("Highlight Object")]
-    public GameObject highlightObj;
+    [SerializeField] GameObject highlightObj;
     List<GameObject> highlightObjects = new List<GameObject>();
-    public Material invalidMat;
-    public Material validMat;
+    [SerializeField] Material invalidMat;
+    [SerializeField] Material validMat;
     bool? prevValidity = null;
     bool showHighlight = false;
 
     [Header("Projection Objects")]
-    public GameObject projectionObj;
+    [SerializeField] GameObject projectionObj;
     List<GameObject> projectionObjects = new List<GameObject>();
     BlockData projectionData;
     bool showProjection = false;
 
     [Header("Showcase Object")]
-    public GameObject showcaseObj;
-    public float showcaseRotationSpeed = 90f;
+    [SerializeField] GameObject showcaseObj;
+    [SerializeField] float showcaseRotationSpeed = 90f;
     MeshFilter showcaseMesh;
     MeshRenderer showcaseRenderer;
 
     [Header("Editing Tool")]
-    public float timeBetweenAction = 0.15f;
-    public int maxtoolSize = 15;
+    [SerializeField] float timeBetweenAction = 0.15f;
+    [SerializeField] int maxtoolSize = 15;
     int toolSize = 1;
     float nextActionTime;
 
@@ -59,7 +60,7 @@ public class MapEditor : MonoBehaviour
     {
         map = MapGenerator.map;
         grid = map.GetGrid();
-        cam = Camera.main;
+        playerInputs = GetComponent<PlayerInputs>();
 
         //projection object
         projectionData = new BlockData{
@@ -138,12 +139,11 @@ public class MapEditor : MonoBehaviour
     }
 
     void SelectSide(){
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
         showHighlight = false;
         showProjection = false;
 
-        if(Physics.Raycast(ray, out hit, 100, mapMask)){
+        if(playerInputs.RaycastHitLayer(mapMask)){
+            RaycastHit hit = playerInputs.Hit;
             Vector3 normal = StraightenNormal(hit.normal, hit.point);
             Vector3Int topCell = grid.WorldToGrid(hit.point + normal * 0.01f);
             Vector3Int bottomCell = grid.WorldToGrid(hit.point - normal * 0.01f);

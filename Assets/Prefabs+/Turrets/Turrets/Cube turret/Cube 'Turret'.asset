@@ -15,4 +15,4 @@ MonoBehaviour:
   Name: Cube Turret
   buildCost: 0
   size: {x: 1, y: 1, z: 1}
-  turret: {fileID: 4030334351076550460, guid: e50e88c56e68fa44ebbbc95994f2db8d, type: 3}
+  turret: {fileID: 4030334351076550460, guid: cd4504fde1862b445adc0dbc765f7ac6, type: 3}

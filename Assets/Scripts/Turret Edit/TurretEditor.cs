@@ -1,15 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(PlayerInputs))]
 public class TurretEditor : MonoBehaviour
 {
     MapGenerator map;
     MapGrid grid;
-    Camera cam;
-    public LayerMask turretMask = 0b_0001_0000_0000;
+    PlayerInputs playerInputs;
+    [SerializeField] LayerMask turretMask = 0b_0001_0000_0000;
     public GameObject upgradeWindow;
     public Text upgradeText;
     public Text sellText;
@@ -21,9 +21,9 @@ public class TurretEditor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main;
         map = MapGenerator.map;
         grid = map.GetGrid();
+        playerInputs = GetComponent<PlayerInputs>();
     }
 
     // Update is called once per frame
@@ -33,16 +33,11 @@ public class TurretEditor : MonoBehaviour
     }
 
     void SelectTurret(){
-        if(EventSystem.current.IsPointerOverGameObject()){
-            return;
-        }
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if(Physics.Raycast(ray, out hit) && (turretMask & 1 << hit.transform.gameObject.layer) != 0 && !TurretPlacer.placedThisFrame){
+        if(playerInputs.RaycastHitLayer(turretMask) && !TurretPlacer.placedThisFrame){
             if(Input.GetButtonDown("Fire1")){
-                OpenEditor(hit.transform.root.gameObject);
+                OpenEditor(playerInputs.Hit.transform.root.gameObject);
             }
-        }else if(Input.GetButtonDown("Fire1")){
+        }else if(!playerInputs.HoveringUI && Input.GetButtonDown("Fire1")){
             CloseEditor();
         }
     }   

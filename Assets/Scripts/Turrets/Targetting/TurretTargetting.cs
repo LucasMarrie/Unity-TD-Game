@@ -1,20 +1,29 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitscanTargetting : MonoBehaviour, ITurretTargetting
+public abstract class TurretTargetting : MonoBehaviour
 {
     Transform target;
-    public float range;
-    [Space]
+    [Header("Distance Range")]
+    public float minRange;
+    public float maxRange;
+    public bool ignoreVerticalRange;
+    float heightExtents = 20; // for ignoring vertical range
+    [Header("Angle Range")]
     public float minHAngle = -180;
     public float maxHAngle = 180;
     [Space]
     public float minVAngle;
     public float maxVAngle;
-    [Space]
-    public float bulletRadius;
-    public float bulletSpeed;
+
+    //turretInfo
+    protected float bulletRadius;
+    protected float bulletSpeed;
+    
+    [Header("Targetting")]
     public Transform targettingCenter;
+    public Transform muzzle;
     public LayerMask targettingLayers = 0b_0000_1000_0000;
     public LayerMask blockingLayers = 0b_0001_1100_0000;
 
@@ -22,9 +31,21 @@ public class HitscanTargetting : MonoBehaviour, ITurretTargetting
         get {return target;}
     }
 
+    protected void Start(){
+        bulletRadius = GetComponent<ITurretFiring>().BulletRadius;
+        bulletSpeed = GetComponent<ITurretFiring>().BulletSpeed;
+    }
+
+    protected void OnDrawGizmos(){
+        Gizmos.DrawWireSphere(targettingCenter.position, maxRange);
+    }
+
     bool FindTarget(){
         Vector3 position = targettingCenter.position;
-        Collider[] targetCols = Physics.OverlapSphere(targettingCenter.position, range, targettingLayers);
+        Collider[] targetCols = ignoreVerticalRange ? 
+        Physics.OverlapCapsule(targettingCenter.position + Vector3.up * heightExtents, targettingCenter.position - Vector3.up * heightExtents, maxRange, targettingLayers)
+        : Physics.OverlapSphere(targettingCenter.position, maxRange, targettingLayers);
+
         List<Transform> targets = new List<Transform>();
         HashSet<Transform> addedTargets = new HashSet<Transform>();
         foreach(Collider targetCol in targetCols){
@@ -44,33 +65,20 @@ public class HitscanTargetting : MonoBehaviour, ITurretTargetting
         return false;
     }    
 
-    bool ValidTarget(Vector3 position){
-        Vector3 direction = position - targettingCenter.position;
-        if(direction.sqrMagnitude > range * range){
+    protected abstract bool ValidTarget(Vector3 position);
+
+    protected bool DistanceInRange(Vector3 position){
+        Vector3 dir = targettingCenter.position - position;
+        if(ignoreVerticalRange) dir.y = 0;
+        float sqrDistance = dir.sqrMagnitude;
+        if(sqrDistance < minRange * minRange || sqrDistance > maxRange * maxRange){
             return false;
-        }
-        Quaternion rotation = Quaternion.LookRotation(direction - transform.forward);
-        if(!RotationInRange(rotation)){
-            return false;
-        }
-        RaycastHit hit;
-        if(bulletRadius > 0){
-            if(Physics.SphereCast(targettingCenter.position, bulletRadius, direction, out hit, range, blockingLayers)){
-                if((targettingLayers & 1 << hit.transform.gameObject.layer) == 0){
-                    return false;
-                }
-            }
         }else{
-            if(Physics.Raycast(targettingCenter.position, direction, out hit, range, blockingLayers)){ 
-                if((targettingLayers & 1 << hit.transform.gameObject.layer) == 0){
-                    return false;
-                }
-            }
+            return true;
         }
-        return true;
     }
 
-    bool RotationInRange(Quaternion rotation){
+    protected bool RotationInRange(Quaternion rotation){
         float hRot = NormalizeAngle(rotation.eulerAngles.y);
         float vRot = NormalizeAngle(rotation.eulerAngles.x);
         if(hRot == Mathf.Clamp(hRot,  minHAngle, maxHAngle) && vRot == Mathf.Clamp(vRot, -maxVAngle, -minVAngle)){  //max and min are flipped because unity calculates it that way
@@ -95,8 +103,8 @@ public class HitscanTargetting : MonoBehaviour, ITurretTargetting
     }
 
     public Quaternion GetTargetAngle(){
-        Vector3 direction = target.position - targettingCenter.position;
-        Quaternion rotation = Quaternion.LookRotation(direction.normalized);
-        return rotation;
+        return AngleToTarget(target.position);
     }
+
+    protected abstract Quaternion AngleToTarget(Vector3 targetPos);
 }

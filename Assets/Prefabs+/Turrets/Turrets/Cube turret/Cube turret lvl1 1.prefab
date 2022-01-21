@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 49565010892695935}
   - component: {fileID: -987575783490859134}
   m_Layer: 8
-  m_Name: Cube turret lvl1
+  m_Name: Cube turret lvl1 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,7 +140,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a817099e43f4e4a80e15daecdbea73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 10
+  minRange: 0
+  maxRange: 20
+  ignoreVerticalRange: 0
   minHAngle: -180
   maxHAngle: 180
   minVAngle: -45

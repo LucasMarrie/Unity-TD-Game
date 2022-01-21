@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64853add67d684b4791f0ad3f788488b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedMap: 
+  selectedMap: Mabamba.json
   blockList: {fileID: 11400000, guid: 0287e9fc3450a5d499ae773ac94af4ce, type: 2}
   gridSize: {x: 15, y: 10, z: 15}
   cellSize: 1.5
@@ -742,9 +742,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1296980660}
+  - component: {fileID: 1296980662}
+  - component: {fileID: 1296980663}
   - component: {fileID: 1296980659}
   - component: {fileID: 1296980661}
-  - component: {fileID: 1296980662}
   m_Layer: 0
   m_Name: Player View
   m_TagString: Untagged
@@ -824,6 +825,23 @@ MonoBehaviour:
   mouseSensitivity: 5
   cam: {fileID: 963194228}
   useMouse: 1
+--- !u!114 &1296980663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296980658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e249fae692ef5024bb5b595d998e45f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  raycastDistance: 1000
+  cam: {fileID: 963194227}
 --- !u!1 &1610620717
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,10 +890,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -950,8 +968,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2085576078}
   m_LocalRotation: {x: -0.08676539, y: -0.09418298, z: -0.008239947, w: 0.99173254}
-  m_LocalPosition: {x: 325.5, y: 163.5, z: 0}
-  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_LocalPosition: {x: 844, y: 421, z: 54}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 1610620721}
   m_RootOrder: 0

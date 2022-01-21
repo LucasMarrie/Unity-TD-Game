@@ -140,12 +140,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a817099e43f4e4a80e15daecdbea73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 10
+  minRange: 0
+  maxRange: 20
+  ignoreVerticalRange: 0
   minHAngle: -180
   maxHAngle: 180
   minVAngle: -45
   maxVAngle: 45
   bulletRadius: 0
+  bulletSpeed: 0
   targettingCenter: {fileID: 9002020493811546443}
   targettingLayers:
     serializedVersion: 2

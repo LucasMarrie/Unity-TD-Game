@@ -16,11 +16,11 @@ public class MapGen_Editor : Editor
         GUILayout.BeginHorizontal();
 
         if(GUILayout.Button("Save Map")){
-            GridData.SaveGrid(mapgen.GetGrid(), "Mabamba.json", false);
+            GridData.SaveGrid(mapgen.GetGrid(), MapGenerator.mapName, false);
         }
 
         if(GUILayout.Button("Load Map")){
-             mapgen.SetGrid(GridData.LoadGrid("Mabamba.json", false));
+             mapgen.SetGrid(GridData.LoadGrid(MapGenerator.mapName, false));
         }
 
         GUILayout.EndHorizontal();

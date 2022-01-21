@@ -8,6 +8,11 @@ public class Bullet : MonoBehaviour, IProjectile
     public float radius;
     public LayerMask CollisionLayer = 0b_0001_1100_0000;
 
+    [Header("Effects")]
+    [Tooltip("Audio + Particle Effect")]
+    [SerializeField] GameObject destructionEffect;
+    [SerializeField] float effectLifetime = 10f;
+
     float speed;
     int damage;
 
@@ -20,8 +25,8 @@ public class Bullet : MonoBehaviour, IProjectile
             RaycastHit hit;
             if(Physics.Raycast(transform.position, transform.forward, out hit, CollisionLayer)){
                 //add damage stuff here
+                Explode(hit.point, hit.normal);
             }
-            Destroy(gameObject);
         }else{
             prevPosition = transform.position;
             rb = GetComponent<Rigidbody>();
@@ -36,9 +41,16 @@ public class Bullet : MonoBehaviour, IProjectile
         RaycastHit hit;
         if(Physics.SphereCast(prevPosition, radius, dir, out hit, dir.magnitude, CollisionLayer)){
 
-            Destroy(gameObject);
+            Explode(hit.point, hit.normal);
         }
         prevPosition = transform.position;
+    }
+
+    void Explode(Vector3 hitPosition, Vector3 hitNormal){
+        GameObject destructionObj = Instantiate(destructionEffect, hitPosition, Quaternion.identity);
+        destructionObj.SetActive(true);
+        Destroy(destructionObj, effectLifetime);
+        Destroy(gameObject);
     }
 
     public void SetStats(float speed, int damage){

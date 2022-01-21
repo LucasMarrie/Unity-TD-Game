@@ -10,9 +10,16 @@ public class StandardShooting : MonoBehaviour, ITurretFiring
     public float firingCooldown;
     float nextTimeToFire;
 
-    [Header ("Bullet Stats")]
+    [Header("Effect")]
+    [SerializeField] ParticleSystem muzzleFlash;
+    [SerializeField] AudioSource shootingSFX;
+
+    [Header("Bullet Stats")]
     public float speed;
+    public float radius;
     public int damage;
+    public float BulletSpeed { get => speed;}
+    public float BulletRadius { get => radius;}
 
     [Header("Ammo and Reloading")]
     public bool infiniteAmmo = true;
@@ -23,8 +30,12 @@ public class StandardShooting : MonoBehaviour, ITurretFiring
     public float autoReloadTime;
     //to-do: add a check within a radius bigger than range to know when it's safe to reload
 
+    void Start(){
+        Reload();
+    }
+
     void Update(){
-        if(!infiniteAmmo && nextTimeToFire + autoReloadTime > Time.time){
+        if(!infiniteAmmo && ammo != maxAmmo && nextTimeToFire + autoReloadTime < Time.time){
             Reload();
         }
     }
@@ -33,11 +44,15 @@ public class StandardShooting : MonoBehaviour, ITurretFiring
         if(nextTimeToFire > Time.time){
             return;
         }
-        if(!infiniteAmmo && ammo == 0) {
-            Reload();
-            return;
+        if(!infiniteAmmo) {
+            if(ammo == 0){
+                Reload();
+                return;
+            }
+            ammo--;
         }
-    
+        muzzleFlash.Play();
+        shootingSFX.Play();
         nextTimeToFire = Time.time + firingCooldown;
 
         GameObject newBullet = Instantiate(bullet, firingPoint.position, firingPoint.rotation);
@@ -47,5 +62,6 @@ public class StandardShooting : MonoBehaviour, ITurretFiring
 
     void Reload(){
         nextTimeToFire = Time.time + reloadTime;
+        ammo = maxAmmo;
     }
 }

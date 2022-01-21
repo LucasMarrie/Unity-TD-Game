@@ -1,19 +1,19 @@
 using UnityEngine;
 
 [RequireComponent(typeof(TurretRotating))]
-[RequireComponent(typeof(ITurretTargetting))]
+[RequireComponent(typeof(TurretTargetting))]
 [RequireComponent(typeof(ITurretFiring))]
 public class TurretMain : MonoBehaviour
 {
     TurretRotating rotatingModule;
-    ITurretTargetting targettingModule;
+    TurretTargetting targettingModule;
     ITurretFiring firingModule;
 
     // Start is called before the first frame update
     void Start()
     {
         rotatingModule = GetComponent<TurretRotating>();
-        targettingModule = GetComponent<ITurretTargetting>();
+        targettingModule = GetComponent<TurretTargetting>();
         firingModule = GetComponent<ITurretFiring>();
     }
 
